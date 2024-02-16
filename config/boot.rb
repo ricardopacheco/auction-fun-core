@@ -8,5 +8,5 @@ Bundler.setup(:default, ENV.fetch('APP_ENV', nil))
 unless defined?(Dotenv)
   require 'dotenv'
   Dotenv.load(".env.#{ENV.fetch("APP_ENV", nil)}")
-  # Dotenv.require_keys('DATABASE_URL', 'REDIS_URL', 'DEFAULT_CURRENCY')
+  Dotenv.require_keys('DATABASE_URL')
 end

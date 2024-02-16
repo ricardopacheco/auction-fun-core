@@ -49,15 +49,66 @@ is considered the value `development` by default.
 
 #### Ruby
 
+#### Database (PostgreSQL)
+
+```sh
+    user@host:~$ sudo apt install build-essential libssl-dev libreadline-dev zlib1g-dev libcurl4-openssl-dev uuid-dev
+    user@host:~$ asdf plugin add postgres
+    user@host:~$ asdf install postgres 16.1
+    user@host:~$ rm -rf $HOME/.asdf/installs/postgres/16.1/data
+    user@host:~$ initdb -D $HOME/.asdf/installs/postgres/16.1/data -U postgres
 ```
+
+```sh
     user@host:~$ sudo apt install autoconf patch build-essential rustc libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libgmp-dev libncurses5-dev libffi-dev libgdbm6 libgdbm-dev libdb-dev uuid-dev
     user@host:~$ asdf plugin add ruby
     user@host:~$ asdf install ruby 3.3.0
-    user@host:~$ gem install pg -v 1.4.5 --verbose -- --with-pg-config=$HOME/.asdf/installs/postgres/14.2/bin/pg_config # Fix pg_config
-    user@host:~$ bundle install
+    user@host:~$ gem install pg -v 1.5.5 --verbose -- --with-pg-config=$HOME/.asdf/installs/postgres/16.1/bin/pg_config # Fix pg_config
+    user@host:~$ bin/setup
 ```
 
-### Interactive prompt
+#### Overmind (Procfile manager)
+
+```sh
+    user@host:~$ asdf install golang latest
+    user@host:~$ go install github.com/DarthSim/overmind/v2
+    user@host:~$ asdf reshim
+```
+
+#### Create database for development environment
+
+> **[postgres]** in rake commands is a name of user for postgres. Change if needed
+
+In current tab:
+
+```sh
+user@host:~$ overmind s -l database
+```
+
+Open a new tab and create development database:
+
+```sh
+user@host:~$ bundle exec rake 'auction_fun_core:db:create_database[postgres]'
+user@host:~$ bundle exec rake 'auction_fun_core:db:migrate'
+```
+
+Now come back to overmind tab, kill the current database process using **Ctrl+c**. After that:
+
+```sh
+user@host:~$ overmind start
+```
+
+This will start all required services needed to run core application.
+
+In new tab, you could run seed data for development with
+
+```sh
+user@host:~$  bundle exec rake 'auction_fun_core:db:seed'
+```
+
+## Interactive prompt
+
+To experiment with that code, run `bin/console` for an interactive prompt.
 
 ## Test
 
@@ -66,6 +117,8 @@ Configure the `.env.test` file with the values according to your machine or netw
 Run the test suite with the coverage report using the command:
 
 ```sh
+user@host:~$ APP_ENV=test bundle exec rake auction_fun_core:db:create_database[userdb]
+user@host:~$ APP_ENV=test bundle exec rake auction_fun_core:db:migrate
 user@host:~$ CI=true APP_ENV=test bundle exec rspec .
 ```
 

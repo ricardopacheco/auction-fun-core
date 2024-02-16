@@ -10,6 +10,9 @@ AuctionFunCore::Application.register_provider(:core) do
   end
 
   start do
+    target.start(:settings)
+    target.start(:persistence)
+
     Dry::Schema.load_extensions(:hints)
     Dry::Schema.load_extensions(:info)
     Dry::Schema.load_extensions(:monads)
