@@ -1,6 +1,23 @@
 # frozen_string_literal: true
 
-require "auction_fun_core"
+ENV['APP_ENV'] = 'test'
+
+if ENV['CI']
+  require 'simplecov'
+  SimpleCov.start do
+    add_filter '/spec'
+    add_group 'System', 'system'
+    add_group 'Config', 'config'
+  end
+end
+
+require_relative '../config/application'
+require 'pry'
+require 'dotenv'
+
+AuctionFunCore::Application.start(:core)
+
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |file| require file }
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
