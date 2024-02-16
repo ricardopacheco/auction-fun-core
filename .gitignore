@@ -9,3 +9,7 @@
 
 # rspec failure tracking
 .rspec_status
+
+# Local variable enviroment
+.env.development
+.env.test
