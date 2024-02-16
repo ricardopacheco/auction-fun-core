@@ -11,6 +11,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
+    env:
+      CI: true
+      APP_ENV: test
+    services:
+      postgres:
+        image: postgres:16.1
+        ports: ["5432:5432"]
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     name: Ruby ${{ matrix.ruby }}
     strategy:
       matrix:
@@ -19,6 +29,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Install postgres client dependencies
+        run: sudo apt-get install libpq-dev
+      - name: Copy .env.test file
+        run: cp .env.test.template .env.test
+      - name: Load .env.test file
+        uses: xom9ikk/dotenv@v2
+        with:
+          path: ./
+          mode: test
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -26,9 +45,11 @@ jobs:
           bundler-cache: true
       - name: Install dependencies
         run: bundle install
+      - name: Create database and running migrations
+        run: |
+          bundle exec rake auction_fun_core:db:create_database[postgres]
+          bundle exec rake auction_fun_core:db:migrate
+        env:
+          POSTGRES_HOST: localhost
       - name: Run suite
         run: bundle exec rspec spec/ --color --format progress
-        env:
-          CI: true
-          RACK_ENV: test
-          RAILS_ENV: test
