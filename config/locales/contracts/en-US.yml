@@ -59,8 +59,10 @@ en-US:
             taken: "has already been taken"
             not_found: "not found"
             password_confirmation: "doesn't match password"
+            login_not_found: "Invalid credentials"
           macro:
             email_format: "need to be a valid email"
+            login_format: "invalid login"
             name_format: "must be between %{min} and %{max} characters"
             password_format: "must be between %{min} and %{max} characters"
             phone_format: "need to be a valid mobile number"

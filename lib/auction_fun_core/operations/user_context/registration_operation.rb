@@ -64,9 +64,7 @@ module AuctionFunCore
         def publish_user_registration(user_id)
           user = user_repository.by_id!(user_id)
 
-          Success(
-            Application[:event].publish("users.registration", user.info)
-          )
+          Success(Application[:event].publish("users.registration", user.info))
         end
       end
     end

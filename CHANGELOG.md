@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+## [0.3.0] - 2024-02-27
+
+### Added
+
+- Authentication for people (users).
+
 ## [0.2.0] - 2024-02-27
 
 ### Added
