@@ -1,5 +1,16 @@
 ## [Unreleased]
 
+## [0.3.1] - 2024-02-27
+
+### Added
+
+- Authentication for people (users).
+- Only active users can authenticate.
+
+### Changed
+
+- [Standardization] Refactoring return monads in operation classes.
+
 ## [0.2.0] - 2024-02-27
 
 ### Added

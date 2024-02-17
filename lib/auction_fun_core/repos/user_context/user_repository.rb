@@ -24,7 +24,7 @@ module AuctionFunCore
 
         # Mount SQL conditions in query for search in database.
         # @param conditions [Hash] DSL Dataset
-        # @return [AuctionCore::Relations::Users]
+        # @return [AuctionFunCore::Relations::Users]
         def query(conditions)
           users.where(conditions)
         end
@@ -42,6 +42,13 @@ module AuctionFunCore
         # @return [ROM::Struct::Auction]
         def by_id!(id)
           users.by_pk(id).one!
+        end
+
+        # Search user in database by email of phone keys.
+        # @param login [String] User email or phone
+        # @return [ROM::Struct::User, nil]
+        def by_login(login)
+          users.where(Sequel[email: login] | Sequel[phone: login]).one
         end
 
         # Checks if it returns any user given one or more conditions.

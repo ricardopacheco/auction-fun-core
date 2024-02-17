@@ -6,9 +6,17 @@ module AuctionFunCore
     # @see https://dry-rb.org/gems/dry-events/main/#event-listeners
     class Listener
       # Listener for to *users.registration* event.
-      # @param event [ROM::Struct::User] the user object
+      # @param user [ROM::Struct::User] the user object
       def on_users_registration(user)
         logger("New registered user: #{user.to_h}")
+      end
+
+      # Listener for to *users.authentication* event.
+      # @param attributes [Hash] Authentication attributes
+      # @option user_id [Integer] User ID
+      # @option time [DateTime] Authentication time
+      def on_users_authentication(attributes)
+        logger("User #{attributes[:user_id]} authenticated on: #{attributes[:time].iso8601}")
       end
 
       private

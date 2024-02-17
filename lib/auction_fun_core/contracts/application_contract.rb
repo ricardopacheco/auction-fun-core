@@ -25,6 +25,12 @@ module AuctionFunCore
         key.failure(I18n.t(:email_format, scope: I18N_MACRO_SCOPE))
       end
 
+      register_macro(:login_format) do
+        next if EMAIL_REGEX.match?(value) || Phonelib.parse(value).valid?
+
+        key.failure(I18n.t(:login_format, scope: I18N_MACRO_SCOPE))
+      end
+
       register_macro(:name_format) do
         next if value.length.between?(MIN_NAME_LENGTH, MAX_NAME_LENGTH)
 
