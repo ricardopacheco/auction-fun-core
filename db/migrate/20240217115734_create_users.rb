@@ -11,6 +11,9 @@ ROM::SQL.migration do
       column :active, TrueClass, null: false, default: true
       column :created_at, DateTime, null: false
       column :updated_at, DateTime, null: false
+
+      index :email, unique: true
+      index :phone, unique: true
     end
   end
 end
