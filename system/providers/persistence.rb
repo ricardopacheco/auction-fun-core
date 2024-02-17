@@ -4,8 +4,8 @@
 # and registers it with our application under the container key.
 AuctionFunCore::Application.register_provider(:persistence) do
   prepare do
-    require 'rom'
-    require 'rom-sql'
+    require "rom"
+    require "rom-sql"
   end
 
   start do

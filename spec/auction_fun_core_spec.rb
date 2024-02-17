@@ -2,6 +2,6 @@
 
 RSpec.describe AuctionFunCore do
   it "has a version number" do
-    expect(AuctionFunCore::VERSION).not_to be nil
+    expect(AuctionFunCore::VERSION).to eq("0.2.0")
   end
 end
