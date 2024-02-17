@@ -1,10 +1,14 @@
 ## [Unreleased]
 
-## [0.3.0] - 2024-02-27
+## [0.3.1] - 2024-02-27
 
 ### Added
 
 - Authentication for people (users).
+
+### Changed
+
+- [Standardization] Refactoring return monads in operation classes.
 
 ## [0.2.0] - 2024-02-27
 

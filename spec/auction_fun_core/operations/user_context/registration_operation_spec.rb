@@ -44,7 +44,7 @@ RSpec.describe AuctionFunCore::Operations::UserContext::RegistrationOperation, t
           end
 
           expect(matched_success).to be_nil
-          expect(matched_failure.errors.to_h[:name]).to include(I18n.t("contracts.errors.key?"))
+          expect(matched_failure[:name]).to include(I18n.t("contracts.errors.key?"))
         end
       end
     end
@@ -64,7 +64,7 @@ RSpec.describe AuctionFunCore::Operations::UserContext::RegistrationOperation, t
 
       it "expect return failure with error messages" do
         expect(operation).to be_failure
-        expect(operation.failure.errors).to be_present
+        expect(operation.failure[:name]).to include(I18n.t("contracts.errors.key?"))
       end
     end
 

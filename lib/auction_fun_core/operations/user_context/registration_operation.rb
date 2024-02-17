@@ -20,7 +20,7 @@ module AuctionFunCore
 
         # @todo Add custom doc
         def call(attributes)
-          values = yield validate(attributes)
+          values = yield validate_contract(attributes)
           values_with_encrypt_password = yield encrypt_password(values)
 
           user_repository.transaction do |_t|
@@ -32,12 +32,16 @@ module AuctionFunCore
           Success(@user)
         end
 
-        # Calls the user creation contract class to perform the validation
+        # Calls registration contract class to perform the validation
         # of the informed attributes.
         # @param attrs [Hash] user attributes
         # @return [Dry::Monads::Result::Success, Dry::Monads::Result::Failure]
-        def validate(attrs)
-          registration_contract.call(attrs).to_monad
+        def validate_contract(attrs)
+          contract = registration_contract.call(attrs)
+
+          return Failure(contract.errors.to_h) if contract.failure?
+
+          Success(contract.to_h)
         end
 
         # Transforms the password attribute, encrypting it to be saved in the database.
