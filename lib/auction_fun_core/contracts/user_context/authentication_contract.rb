@@ -27,17 +27,18 @@ module AuctionFunCore
           next if (rule_error?(:login) || schema_error?(:login)) || (rule_error?(:password) || schema_error?(:password))
 
           context[:user] ||= user_repository.by_login(values[:login])
-          next if context[:user].present? && valid_password?(values[:password], context[:user].password_digest)
+
+          next if context[:user].present? && context[:user].active? && (BCrypt::Password.new(context[:user].password_digest) == values[:password])
+
+          if context[:user].blank? || (BCrypt::Password.new(context[:user].password_digest) != values[:password])
+            key(:base).failure(I18n.t("login_not_found", scope: I18N_SCOPE))
+          end
+
+          if context[:user].present? && context[:user].inactive?
+            key(:base).failure(I18n.t("inactive_account", scope: I18N_SCOPE))
+          end
 
           key(:base).failure(I18n.t("login_not_found", scope: I18N_SCOPE))
-        end
-
-        private
-
-        def valid_password?(password, password_digest)
-          return false if password_digest.blank?
-
-          BCrypt::Password.new(password_digest) == password
         end
       end
     end

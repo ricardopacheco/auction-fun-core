@@ -63,6 +63,18 @@ RSpec.describe AuctionFunCore::Contracts::UserContext::AuthenticationContract, t
           )
         end
       end
+
+      context "when credentials are valid but user is inactive" do
+        let(:user) { Factory[:user, :inactive] }
+        let(:attributes) { {login: user.email, password: "password"} }
+
+        it "expect failure with error messages" do
+          expect(contract).to be_failure
+          expect(contract.errors[:base]).to include(
+            I18n.t("contracts.errors.custom.default.inactive_account")
+          )
+        end
+      end
     end
 
     context "when credentials are valid" do

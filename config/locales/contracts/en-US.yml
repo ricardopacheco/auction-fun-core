@@ -60,6 +60,7 @@ en-US:
             not_found: "not found"
             password_confirmation: "doesn't match password"
             login_not_found: "Invalid credentials"
+            inactive_account: "Your account is suspended or inactive"
           macro:
             email_format: "need to be a valid email"
             login_format: "invalid login"

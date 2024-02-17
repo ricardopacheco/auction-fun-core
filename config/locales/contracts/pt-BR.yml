@@ -59,6 +59,7 @@ pt-BR:
           not_found: "não encontrado"
           password_confirmation: "não corresponde à senha"
           login_not_found: "Credenciais inválidas"
+          inactive_account: "Sua conta está suspensa ou inativa"
         macro:
           email_format: "não é um email válido"
           login_format: "login inválido"

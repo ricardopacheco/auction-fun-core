@@ -5,6 +5,7 @@
 ### Added
 
 - Authentication for people (users).
+- Only active users can authenticate.
 
 ### Changed
 
