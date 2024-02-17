@@ -22,7 +22,8 @@ module AuctionFunCore
         rule(:password).validate(:password_format)
 
         # Validation for login.
-        # Must to be present and format should be a email or phone.
+        # Searches for the user in the database from the login, and, if found,
+        # compares the entered password.
         rule do |context:|
           next if (rule_error?(:login) || schema_error?(:login)) || (rule_error?(:password) || schema_error?(:password))
 
