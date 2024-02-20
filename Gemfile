@@ -6,6 +6,7 @@ source "https://rubygems.org"
 gemspec
 
 gem "activesupport", "7.1.3"
+gem "actionmailer", "7.1.3"
 gem "bcrypt", "3.1.20"
 gem "dotenv", "3.0.2"
 gem "dry-events", "1.0.1"

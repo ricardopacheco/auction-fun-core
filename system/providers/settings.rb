@@ -15,5 +15,6 @@ AuctionFunCore::Application.register_provider(:settings, from: :dry_system) do
     setting :logger_level, default: :info, constructor: Dry::Types["symbol"]
       .constructor { |value| value.to_s.downcase.to_sym }
       .enum(:trace, :unknown, :error, :fatal, :warn, :info, :debug)
+    setting :mailer_path, default: Pathname.new(AuctionFunCore.lib_path)
   end
 end

@@ -13,5 +13,9 @@ module AuctionFunCore
     File.expand_path "..", __dir__
   end
 
+  def self.lib_path
+    File.expand_path ".", __dir__
+  end
+
   autoload :Application, Pathname.new(File.expand_path("../config/application", __dir__))
 end
