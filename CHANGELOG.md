@@ -1,6 +1,18 @@
 ## [Unreleased]
 
-## [0.3.1] - 2024-02-27
+## [0.4.0] - 2024-02-24
+
+### Added
+
+- Staff entity and your context to handle staff business rules
+- Context for new staff registration
+- Add postgresql enum for staff kind
+
+### Fixed
+
+- Fix rake task for create migrations
+
+## [0.3.1] - 2024-02-17
 
 ### Added
 
@@ -11,7 +23,7 @@
 
 - [Standardization] Refactoring return monads in operation classes.
 
-## [0.2.0] - 2024-02-27
+## [0.2.0] - 2024-02-17
 
 ### Added
 
