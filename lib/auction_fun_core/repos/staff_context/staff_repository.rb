@@ -44,6 +44,13 @@ module AuctionFunCore
           staffs.by_pk(id).one!
         end
 
+        # Search staff in database by email of phone keys.
+        # @param login [String] Staff email or phone
+        # @return [ROM::Struct::Staff, nil]
+        def by_login(login)
+          staffs.where(Sequel[email: login] | Sequel[phone: login]).one
+        end
+
         # Checks if it returns any staff given one or more conditions.
         # @param conditions [Hash] DSL Dataset
         # @return [true] when some staff is returned from the given condition.
