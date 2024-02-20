@@ -5,6 +5,12 @@ module AuctionFunCore
     # Event class that can listen business events.
     # @see https://dry-rb.org/gems/dry-events/main/#event-listeners
     class Listener
+      # Listener for to *staffs.registration* event.
+      # @param user [ROM::Struct::Staff] the staff object
+      def on_staffs_registration(staff)
+        logger("New registered staff: #{staff.to_h}")
+      end
+
       # Listener for to *users.registration* event.
       # @param user [ROM::Struct::User] the user object
       def on_users_registration(user)
