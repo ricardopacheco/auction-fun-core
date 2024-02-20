@@ -2,12 +2,12 @@
 
 module AuctionFunCore
   module Operations
-    module UserContext
+    module StaffContext
       ##
-      # Operation class for authenticate users.
+      # Operation class for authenticate staff members.
       #
       class AuthenticationOperation < AuctionFunCore::Operations::Base
-        include Import["contracts.user_context.authentication_contract"]
+        include Import["contracts.staff_context.authentication_contract"]
 
         def self.call(attributes, &block)
           operation = new.call(attributes)
@@ -19,31 +19,31 @@ module AuctionFunCore
 
         # @todo Add custom doc
         def call(attributes)
-          user = yield validate_contract(attributes)
+          staff = yield validate_contract(attributes)
 
-          yield publish_user_authentication(user.id)
+          yield publish_staff_authentication(staff.id)
 
-          Success(user)
+          Success(staff)
         end
 
         # Calls the authentication contract class to perform the validation
         # and authentication of the informed attributes.
-        # @param attrs [Hash] user attributes
+        # @param attrs [Hash] Staff attributes
         # @return [Dry::Monads::Result::Success, Dry::Monads::Result::Failure]
         def validate_contract(attrs)
           contract = authentication_contract.call(attrs)
 
           return Failure(contract.errors.to_h) if contract.failure?
 
-          Success(contract.context[:user])
+          Success(contract.context[:staff])
         end
 
-        # Triggers the publication of event *users.registration*.
-        # @param user_id [Integer] User ID
+        # Triggers the publication of event *staffs.registration*.
+        # @param staff_id [Integer] Staff ID
         # @return [Dry::Monads::Result::Success]
-        def publish_user_authentication(user_id, time = Time.current)
+        def publish_staff_authentication(staff_id, time = Time.current)
           Success(
-            Application[:event].publish("users.authentication", {user_id: user_id, time: time})
+            Application[:event].publish("staffs.authentication", {staff_id: staff_id, time: time})
           )
         end
       end

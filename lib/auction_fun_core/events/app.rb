@@ -8,6 +8,7 @@ module AuctionFunCore
       # @!parser include Dry::Events::Publisher[:app]
       include Dry::Events::Publisher[:app]
 
+      register_event("staffs.authentication")
       register_event("staffs.registration")
 
       register_event("users.authentication")

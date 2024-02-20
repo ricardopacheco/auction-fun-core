@@ -1,6 +1,13 @@
 ## [Unreleased]
 
-## [0.4.0] - 2024-02-24
+## [0.4.1] - 2024-02-20
+
+### Added
+
+- Authentication for staff members.
+- Only active staff member can authenticate.
+
+## [0.4.0] - 2024-02-20
 
 ### Added
 

@@ -5,6 +5,14 @@ module AuctionFunCore
     # Event class that can listen business events.
     # @see https://dry-rb.org/gems/dry-events/main/#event-listeners
     class Listener
+      # Listener for to *staffs.authentication* event.
+      # @param attributes [Hash] Authentication attributes
+      # @option staff_id [Integer] Staff ID
+      # @option time [DateTime] Authentication time
+      def on_staffs_authentication(attributes)
+        logger("Staff #{attributes[:staff_id]} authenticated on: #{attributes[:time].iso8601}")
+      end
+
       # Listener for to *staffs.registration* event.
       # @param user [ROM::Struct::Staff] the staff object
       def on_staffs_registration(staff)
