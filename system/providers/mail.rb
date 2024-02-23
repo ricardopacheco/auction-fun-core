@@ -14,10 +14,10 @@ AuctionFunCore::Application.register_provider(:mail) do
       config.layout = "layout"
       config.delivery_method = :smtp
       config.delivery_options = {
-        address: "localhost",
-        port: 1025
+        address: target[:settings].smtp_address,
+        port: target[:settings].smtp_port
       }
-      config.default_from = "system@auctionfun.com"
+      config.default_from = target[:settings].default_email_system
       config.logger = nil
       config.log_body = false
     end
