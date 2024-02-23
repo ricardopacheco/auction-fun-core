@@ -132,6 +132,10 @@ This project uses `yadr` as a documentation tool. To generate documentation and 
 
 Documentation will be available at `http://localhost:8808`
 
+## External resources
+
+- [Email templates](https://codedmails.com/)
+
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
