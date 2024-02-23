@@ -1,9 +1,11 @@
 en-US:
   mail:
     general:
+      hello: "Hi %{name}"
       app_name: "AuctionFun"
       team: "Team AuctionFun"
     user_context:
       registration:
-        title: "Welcome to"
-        description: "Bem-vindo/a à nossa plataforma! Estamos encantados por tê-lo/a conosco. Se tiver alguma dúvida ou precisar de ajuda, não hesite em entrar em contato."
+        subject: "Welcome to AuctionFun"
+        body:
+          description: "Welcome to our platform! We are delighted to have you on board. If you have any questions or need assistance, feel free to reach out."

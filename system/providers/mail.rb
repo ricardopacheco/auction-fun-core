@@ -5,12 +5,11 @@
 AuctionFunCore::Application.register_provider(:mail) do
   prepare do
     require "idlemailer"
-    require "pry"
   end
 
   start do
     IdleMailer.config do |config|
-      config.templates = Pathname.new(AuctionFunCore.root).join("lib", "auction_fun_core", "infra", "mail", "templates")
+      config.templates = Pathname.new(AuctionFunCore::Application.root).join("lib", "auction_fun_core", "services", "mail", "templates")
       config.cache_templates = true
       config.layout = "layout"
       config.delivery_method = :smtp
