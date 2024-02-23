@@ -1,0 +1,11 @@
+pt-BR:
+  mail:
+    general:
+      hello: "Olá %{name}"
+      app_name: "AuctionFun"
+      team: "Time AuctionFun"
+    user_context:
+      registration:
+        subject: "Bem vindo a AuctionFun"
+        body:
+          description: "Bem-vindo/a à nossa plataforma! Estamos encantados por tê-lo/a conosco. Se tiver alguma dúvida ou precisar de ajuda, não hesite em entrar em contato."

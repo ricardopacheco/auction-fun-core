@@ -8,5 +8,7 @@ Bundler.setup(:default, ENV.fetch("APP_ENV", nil))
 unless defined?(Dotenv)
   require "dotenv"
   Dotenv.load(".env.#{ENV.fetch("APP_ENV", nil)}")
-  Dotenv.require_keys("DATABASE_URL")
+  Dotenv.require_keys(
+    "DATABASE_URL", "DEFAULT_EMAIL_SYSTEM", "SMTP_ADDRESS", "SMTP_PORT"
+  )
 end

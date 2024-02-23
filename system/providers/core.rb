@@ -23,6 +23,7 @@ AuctionFunCore::Application.register_provider(:core) do
     target.start(:events)
     target.start(:logger)
     target.start(:persistence)
+    target.start(:mail)
   end
 
   stop do

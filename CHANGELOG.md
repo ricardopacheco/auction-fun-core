@@ -1,5 +1,21 @@
 ## [Unreleased]
 
+## [0.5.0] - 2024-02-23
+
+### Added
+
+- Layer for external services.
+- Creation of first external service: email.
+- Configure email as application provider.
+- Mandatory environment variables for communication with email service.
+- Configuring development environment to run email service on local machine.
+- Using `idlemailer` dependency to build emails and triggers.
+
+## Changes
+
+- I18n locale directory from `config/locales` to root path of project.
+- Scope i18n messages by locale.
+
 ## [0.4.1] - 2024-02-20
 
 ### Added
