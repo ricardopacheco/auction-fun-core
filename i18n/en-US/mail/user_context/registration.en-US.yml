@@ -1,0 +1,9 @@
+en-US:
+  mail:
+    general:
+      app_name: "AuctionFun"
+      team: "Team AuctionFun"
+    user_context:
+      registration:
+        title: "Welcome to"
+        description: "Bem-vindo/a à nossa plataforma! Estamos encantados por tê-lo/a conosco. Se tiver alguma dúvida ou precisar de ajuda, não hesite em entrar em contato."

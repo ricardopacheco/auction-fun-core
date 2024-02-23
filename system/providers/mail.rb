@@ -4,19 +4,23 @@
 # and registers it with our application under the container key.
 AuctionFunCore::Application.register_provider(:mail) do
   prepare do
-    require "action_mailer"
+    require "idlemailer"
     require "pry"
   end
 
   start do
-    ActionMailer::Base.delivery_method = :smtp
-    ActionMailer::Base.default_options = {from: "from@example.com", host: "http://localhost:3000"}
-    ActionMailer::Base.delivery_method = :smtp
-    ActionMailer::Base.perform_deliveries = true
-    ActionMailer::Base.raise_delivery_errors = true
-    ActionMailer::Base.smtp_settings = {
-      address: "localhost",
-      port: 1025
-    }
+    IdleMailer.config do |config|
+      config.templates = Pathname.new(AuctionFunCore.root).join("lib", "auction_fun_core", "infra", "mail", "templates")
+      config.cache_templates = true
+      config.layout = "layout"
+      config.delivery_method = :smtp
+      config.delivery_options = {
+        address: "localhost",
+        port: 1025
+      }
+      config.default_from = "system@auctionfun.com"
+      config.logger = nil
+      config.log_body = false
+    end
   end
 end

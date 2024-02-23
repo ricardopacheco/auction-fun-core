@@ -6,35 +6,6 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    actionmailer (7.1.3)
-      actionpack (= 7.1.3)
-      actionview (= 7.1.3)
-      activejob (= 7.1.3)
-      activesupport (= 7.1.3)
-      mail (~> 2.5, >= 2.5.4)
-      net-imap
-      net-pop
-      net-smtp
-      rails-dom-testing (~> 2.2)
-    actionpack (7.1.3)
-      actionview (= 7.1.3)
-      activesupport (= 7.1.3)
-      nokogiri (>= 1.8.5)
-      racc
-      rack (>= 2.2.4)
-      rack-session (>= 1.0.1)
-      rack-test (>= 0.6.3)
-      rails-dom-testing (~> 2.2)
-      rails-html-sanitizer (~> 1.6)
-    actionview (7.1.3)
-      activesupport (= 7.1.3)
-      builder (~> 3.1)
-      erubi (~> 1.11)
-      rails-dom-testing (~> 2.2)
-      rails-html-sanitizer (~> 1.6)
-    activejob (7.1.3)
-      activesupport (= 7.1.3)
-      globalid (>= 0.3.6)
     activesupport (7.1.3)
       base64
       bigdecimal
@@ -49,11 +20,9 @@ GEM
     base64 (0.2.0)
     bcrypt (3.1.20)
     bigdecimal (3.1.6)
-    builder (3.2.4)
     coderay (1.1.3)
     concurrent-ruby (1.2.3)
     connection_pool (2.4.1)
-    crass (1.0.6)
     database_cleaner-core (2.0.1)
     database_cleaner-sequel (2.0.2)
       database_cleaner-core (~> 2.0.0)
@@ -119,20 +88,16 @@ GEM
       dry-initializer (~> 3.0)
       dry-schema (>= 1.12, < 2)
       zeitwerk (~> 2.6)
-    erubi (1.12.0)
     faker (3.2.3)
       i18n (>= 1.8.11, < 2)
-    globalid (1.2.1)
-      activesupport (>= 6.1)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
+    idlemailer (2.2.0)
+      mail (~> 2.0)
     json (2.7.1)
     language_server-protocol (3.17.0.3)
     lint_roller (1.1.0)
-    loofah (2.22.0)
-      crass (~> 1.0.2)
-      nokogiri (>= 1.12.0)
     mail (2.8.1)
       mini_mime (>= 0.1.1)
       net-imap
@@ -140,7 +105,6 @@ GEM
       net-smtp
     method_source (1.0.0)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.5)
     minitest (5.22.2)
     money (6.16.0)
       i18n (>= 0.6.4, <= 2)
@@ -154,11 +118,6 @@ GEM
       timeout
     net-smtp (0.4.0.1)
       net-protocol
-    nokogiri (1.16.2)
-      mini_portile2 (~> 2.8.2)
-      racc (~> 1.4)
-    nokogiri (1.16.2-x86_64-linux)
-      racc (~> 1.4)
     parallel (1.24.0)
     parser (3.3.0.5)
       ast (~> 2.4.1)
@@ -169,18 +128,6 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     racc (1.7.3)
-    rack (3.0.9)
-    rack-session (2.0.0)
-      rack (>= 3.0.0)
-    rack-test (2.1.0)
-      rack (>= 1.3)
-    rails-dom-testing (2.2.0)
-      activesupport (>= 5.0.0)
-      minitest
-      nokogiri (>= 1.6)
-    rails-html-sanitizer (1.6.0)
-      loofah (~> 2.21)
-      nokogiri (~> 1.14)
     rainbow (3.1.1)
     rake (13.1.0)
     regexp_parser (2.9.0)
@@ -281,7 +228,6 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  actionmailer (= 7.1.3)
   activesupport (= 7.1.3)
   auction_fun_core!
   bcrypt (= 3.1.20)
@@ -293,6 +239,7 @@ DEPENDENCIES
   dry-system (= 1.0.1)
   dry-validation (= 1.10.0)
   faker (= 3.2.3)
+  idlemailer (= 2.2.0)
   money (= 6.16.0)
   pg (= 1.5.5)
   phonelib (= 0.8.7)

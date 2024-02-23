@@ -1,0 +1,9 @@
+pt-BR:
+  mail:
+    general:
+      app_name: "AuctionFun"
+      team: "Time AuctionFun"
+    user_context:
+      registration:
+        title: "Bem vindo ao"
+        description: "Welcome to our platform! We are delighted to have you on board. If you have any questions or need assistance, feel free to reach out."

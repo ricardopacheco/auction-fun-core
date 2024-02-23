@@ -17,7 +17,7 @@ module AuctionFunCore
       config.messages.backend = :i18n
       config.messages.default_locale = I18n.default_locale
       config.messages.top_namespace = "contracts"
-      config.messages.load_paths << Application.root.join("config/locales/contracts/#{I18n.default_locale}.yml").to_s
+      config.messages.load_paths << Application.root.join("i18n/#{I18n.default_locale}/contracts/contracts.#{I18n.default_locale}.yml").to_s
 
       register_macro(:email_format) do
         next if EMAIL_REGEX.match?(value)
