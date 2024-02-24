@@ -7,8 +7,8 @@ module AuctionFunCore
       # Operation class for create new users.
       #
       class RegistrationOperation < AuctionFunCore::Operations::Base
-        include Import["contracts.user_context.registration_contract"]
         include Import["repos.user_context.user_repository"]
+        include Import["contracts.user_context.registration_contract"]
 
         def self.call(attributes, &block)
           operation = new.call(attributes)
@@ -27,6 +27,7 @@ module AuctionFunCore
             @user = yield persist(values_with_encrypt_password)
 
             yield publish_user_registration(@user.id)
+            yield send_welcome_email(@user.id)
           end
 
           Success(@user)
@@ -69,6 +70,22 @@ module AuctionFunCore
           user = user_repository.by_id!(user_id)
 
           Success(Application[:event].publish("users.registration", user.info))
+        end
+
+        # Schedule the asynchronous sending of a welcome email.
+        # @param user_id [Integer] User ID
+        # @return [Dry::Monads::Result::Success]
+        def send_welcome_email(user_id)
+          Success(registration_mailer_job.perform_async(user_id))
+        end
+
+        private
+
+        # Since the shipping code structure does not follow project conventions,
+        # making the default injection dependency would be more complicated.
+        # Therefore, here I directly explain the class to be called.
+        def registration_mailer_job
+          AuctionFunCore::Workers::Services::Mail::UserContext::RegistrationMailerJob
         end
       end
     end

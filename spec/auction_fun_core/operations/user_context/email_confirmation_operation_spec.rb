@@ -3,8 +3,6 @@
 require "spec_helper"
 
 RSpec.describe AuctionFunCore::Operations::UserContext::EmailConfirmationOperation, type: :operation do
-  let(:user_repo) { AuctionCore::Repos::UserRepo.new }
-
   describe ".call(attributes, &block)" do
     let(:operation) { described_class }
 

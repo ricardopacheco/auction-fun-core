@@ -20,6 +20,7 @@ gem "phonelib", "0.8.7"
 gem "rake", "13.1.0"
 gem "rom", "5.3.0"
 gem "rom-sql", "3.6.2"
+gem "sidekiq", "7.2.2"
 gem "yard", "0.9.34"
 gem "zeitwerk", "2.6.13"
 

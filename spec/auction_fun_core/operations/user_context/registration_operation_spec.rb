@@ -78,12 +78,16 @@ RSpec.describe AuctionFunCore::Operations::UserContext::RegistrationOperation, t
 
       before do
         allow(AuctionFunCore::Application[:event]).to receive(:publish)
+        allow(AuctionFunCore::Workers::Services::Mail::UserContext::RegistrationMailerJob)
+          .to receive(:perform_async)
       end
 
       it "expect persist new user on database and dispatch event registration" do
         expect { operation }.to change(user_repository, :count).from(0).to(1)
 
         expect(AuctionFunCore::Application[:event]).to have_received(:publish).once
+        expect(AuctionFunCore::Workers::Services::Mail::UserContext::RegistrationMailerJob)
+          .to have_received(:perform_async).once
       end
 
       it "expect return success without error messages" do
