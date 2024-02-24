@@ -1,5 +1,21 @@
 ## [Unreleased]
 
+## [0.6.0] - 2024-02-24
+
+### Added
+
+- Redis as database for background processing.
+- Add sidekiq as background processing.
+- Add required environment variable `REDIS_URL` for redis server connection.
+- Add background job as provider application.
+- Add exponential backoff for handle possible scenario failures in background.
+
+### Changes
+
+- UserContext::Registration operation to generate email confirmation and send email with token.
+- Syntax standardization for erb files.
+- Refactoring some tests removing unecessary code.
+
 ## [0.5.0] - 2024-02-23
 
 ### Added
