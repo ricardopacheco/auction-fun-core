@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Factory.define(:staff) do |f|
+Factory.define(:staff, struct_namespace: AuctionFunCore::Entities) do |f|
   f.name { fake(:name, :name) }
   f.email { fake(:internet, :email) }
   f.phone { fake(:phone_number, :cell_phone_in_e164).tr_s("^0-9", "") }

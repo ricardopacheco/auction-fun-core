@@ -13,6 +13,18 @@ module AuctionFunCore
         !active
       end
 
+      def confirmed?
+        confirmed_at.present?
+      end
+
+      def email_confirmed?
+        email_confirmation_at.present?
+      end
+
+      def phone_confirmed?
+        phone_confirmation_at.present?
+      end
+
       def info
         attributes.except(:password_digest)
       end

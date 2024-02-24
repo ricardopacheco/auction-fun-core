@@ -33,6 +33,14 @@ module AuctionFunCore
         logger("User #{attributes[:user_id]} authenticated on: #{attributes[:time].iso8601}")
       end
 
+      # Listener for to *users.confirmation* event.
+      # @param attributes [Hash] Confirmation attributes
+      # @option user_id [Integer] User ID
+      # @option time [DateTime] Authentication time
+      def on_users_confirmation(attributes)
+        logger("User #{attributes[:user_id]} confirmed at: #{attributes[:time].iso8601}")
+      end
+
       private
 
       # Append message to system log.
