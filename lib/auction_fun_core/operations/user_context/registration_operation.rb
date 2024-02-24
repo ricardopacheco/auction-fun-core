@@ -22,9 +22,10 @@ module AuctionFunCore
         def call(attributes)
           values = yield validate_contract(attributes)
           values_with_encrypt_password = yield encrypt_password(values)
+          values_with_confirmation_attributes = yield confirmation_attributes(values_with_encrypt_password)
 
           user_repository.transaction do |_t|
-            @user = yield persist(values_with_encrypt_password)
+            @user = yield persist(values_with_confirmation_attributes)
 
             yield publish_user_registration(@user.id)
             yield send_welcome_email(@user.id)
@@ -49,11 +50,18 @@ module AuctionFunCore
         # @param result [Hash] User valid contract attributes
         # @return [Hash] Valid user database
         def encrypt_password(attrs)
-          attributes = attrs.to_h.except(:password)
+          attributes = attrs.to_h.except(:password, :password_confirmation)
 
           Success(
             {**attributes, password_digest: BCrypt::Password.create(attrs[:password])}
           )
+        end
+
+        # Adds confirmation parameters to the given attributes.
+        # @param result [Hash] User valid contract attributes with password
+        # @return [Hash] Valid user database
+        def confirmation_attributes(attrs)
+          Success({**attrs, email_confirmation_token: generate_email_token})
         end
 
         # Calls the user repository class to persist the attributes in the database.
@@ -79,13 +87,17 @@ module AuctionFunCore
           Success(registration_mailer_job.perform_async(user_id))
         end
 
-        private
-
         # Since the shipping code structure does not follow project conventions,
         # making the default injection dependency would be more complicated.
         # Therefore, here I directly explain the class to be called.
+        private
+
         def registration_mailer_job
           AuctionFunCore::Workers::Services::Mail::UserContext::RegistrationMailerJob
+        end
+
+        def generate_email_token
+          ::AuctionFunCore::Business::TokenGenerator.generate_email_token
         end
       end
     end
