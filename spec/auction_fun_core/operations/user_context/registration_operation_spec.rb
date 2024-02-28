@@ -78,17 +78,22 @@ RSpec.describe AuctionFunCore::Operations::UserContext::RegistrationOperation, t
 
       before do
         allow(AuctionFunCore::Application[:event]).to receive(:publish)
-      end
-
-      it "expect persist new user on database and dispatch event registration" do
-        expect { operation }.to change(user_repository, :count).from(0).to(1)
-
-        expect(AuctionFunCore::Application[:event]).to have_received(:publish).once
+        allow(AuctionFunCore::Workers::Services::Mail::UserContext::RegistrationMailerJob)
+          .to receive(:perform_async)
       end
 
       it "expect return success without error messages" do
         expect(operation).to be_success
         expect(operation.failure).to be_blank
+      end
+
+      it "expect create user with email confirmation token on database and dispatch event registration" do
+        expect { operation }.to change(user_repository, :count).from(0).to(1)
+
+        expect(operation.success.email_confirmation_token).to be_present
+        expect(AuctionFunCore::Application[:event]).to have_received(:publish).once
+        expect(AuctionFunCore::Workers::Services::Mail::UserContext::RegistrationMailerJob)
+          .to have_received(:perform_async).once
       end
     end
   end

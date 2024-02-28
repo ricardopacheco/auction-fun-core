@@ -19,7 +19,7 @@ RSpec.describe AuctionFunCore::Services::Mail::UserContext::RegistrationMailer, 
     end
 
     context "when user has valid data" do
-      let(:user) { Factory.structs[:user, id: 1] }
+      let(:user) { Factory.structs[:user, :with_email_confirmation_token, id: 1] }
 
       subject(:mailer) { described_class.new(user).deliver }
 

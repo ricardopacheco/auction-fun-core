@@ -12,6 +12,8 @@ if ENV["CI"]
     add_group "Operations", "lib/auction_fun_core/operations"
     add_group "Relations", "lib/auction_fun_core/relations"
     add_group "Repositories", "lib/auction_fun_core/repos"
+    add_group "Services", "lib/auction_fun_core/services"
+    add_group "Workers", "lib/auction_fun_core/workers"
     add_group "System", "system"
     add_group "Config", "config"
   end
@@ -22,6 +24,7 @@ require "pry"
 require "dotenv"
 require "rom-factory"
 require "database_cleaner/sequel"
+require "sidekiq/testing"
 
 AuctionFunCore::Application.start(:core)
 
@@ -47,6 +50,7 @@ RSpec.configure do |config|
 
   config.before do
     DatabaseCleaner.clean
+    Sidekiq::Worker.clear_all
   end
 
   config.after(:suite) do

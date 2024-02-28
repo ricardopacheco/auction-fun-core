@@ -2,14 +2,14 @@
 
 require "spec_helper"
 
-RSpec.describe AuctionFunCore::Operations::UserContext::AuthenticationOperation, type: :operation do
+RSpec.describe AuctionFunCore::Operations::UserContext::PhoneConfirmationOperation, type: :operation do
   describe ".call(attributes, &block)" do
     let(:operation) { described_class }
 
     context "when block is given" do
       context "when operation happens with success" do
-        let(:user) { Factory[:user] }
-        let(:attributes) { {login: user.email, password: "password"} }
+        let(:user) { Factory[:user, :unconfirmed, :with_phone_confirmation_token] }
+        let(:attributes) { {phone_confirmation_token: user.phone_confirmation_token} }
 
         it "expect result success matching block" do
           matched_success = nil
@@ -38,7 +38,7 @@ RSpec.describe AuctionFunCore::Operations::UserContext::AuthenticationOperation,
           end
 
           expect(matched_success).to be_nil
-          expect(matched_failure[:login]).to include(I18n.t("contracts.errors.key?"))
+          expect(matched_failure[:phone_confirmation_token]).to include(I18n.t("contracts.errors.key?"))
         end
       end
     end
@@ -52,13 +52,13 @@ RSpec.describe AuctionFunCore::Operations::UserContext::AuthenticationOperation,
 
       it "expect return failure with error messages" do
         expect(operation).to be_failure
-        expect(operation.failure[:login]).to include(I18n.t("contracts.errors.key?"))
+        expect(operation.failure[:phone_confirmation_token]).to include(I18n.t("contracts.errors.key?"))
       end
     end
 
     context "when contract are valid" do
-      let(:user) { Factory[:user] }
-      let(:attributes) { {login: user.email, password: "password"} }
+      let(:user) { Factory[:user, :unconfirmed, :with_phone_confirmation_token] }
+      let(:attributes) { {phone_confirmation_token: user.phone_confirmation_token} }
 
       before do
         allow(AuctionFunCore::Application[:event]).to receive(:publish)
@@ -66,6 +66,8 @@ RSpec.describe AuctionFunCore::Operations::UserContext::AuthenticationOperation,
 
       it "expect return success" do
         expect(operation).to be_success
+        expect(operation.success).to be_phone_confirmed
+        expect(operation.success).to be_confirmed
 
         expect(AuctionFunCore::Application[:event]).to have_received(:publish).once
       end

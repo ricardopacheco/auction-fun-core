@@ -51,6 +51,20 @@ module AuctionFunCore
           users.where(Sequel[email: login] | Sequel[phone: login]).one
         end
 
+        # Search user in database by email_confirmation_token key.
+        # @param email_confirmation_token [String] User email confirmation token
+        # @return [ROM::Struct::User, nil]
+        def by_email_confirmation_token(email_confirmation_token)
+          users.where(Sequel[email_confirmation_token: email_confirmation_token]).one
+        end
+
+        # Search user in database by phone_confirmation_token of phone keys.
+        # @param phone [String] User phone confirmation token
+        # @return [ROM::Struct::User, nil]
+        def by_phone_confirmation_token(phone_confirmation_token)
+          users.where(Sequel[phone_confirmation_token: phone_confirmation_token]).one
+        end
+
         # Checks if it returns any user given one or more conditions.
         # @param conditions [Hash] DSL Dataset
         # @return [true] when some user is returned from the given condition.

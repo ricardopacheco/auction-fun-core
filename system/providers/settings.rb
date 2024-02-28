@@ -10,8 +10,11 @@ AuctionFunCore::Application.register_provider(:settings, from: :dry_system) do
   end
 
   settings do
-    setting :database_url, constructor: Dry::Types["string"].constrained(filled: true)
     setting :logger, default: Logger.new($stdout)
+    setting :database_url, default: ENV.fetch("DATABASE_URL"),
+      constructor: Dry::Types["string"].constrained(filled: true)
+    setting :redis_url, default: ENV.fetch("REDIS_URL"),
+      constructor: Dry::Types["string"].constrained(filled: true)
     setting :logger_level, default: :info, constructor: Dry::Types["symbol"]
       .constructor { |value| value.to_s.downcase.to_sym }
       .enum(:trace, :unknown, :error, :fatal, :warn, :info, :debug)

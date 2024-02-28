@@ -3,8 +3,6 @@
 require "spec_helper"
 
 RSpec.describe AuctionFunCore::Operations::StaffContext::AuthenticationOperation, type: :operation do
-  let(:staff_repo) { AuctionCore::Repos::StaffRepo.new }
-
   describe ".call(attributes, &block)" do
     let(:operation) { described_class }
 

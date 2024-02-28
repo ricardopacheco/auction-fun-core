@@ -9,3 +9,4 @@ pt-BR:
         subject: "Bem vindo a AuctionFun"
         body:
           description: "Bem-vindo/a à nossa plataforma! Estamos encantados por tê-lo/a conosco. Se tiver alguma dúvida ou precisar de ajuda, não hesite em entrar em contato."
+          email_confirmation_token: "Esse é o seu token de confirmação: <b>%{token}</b>"

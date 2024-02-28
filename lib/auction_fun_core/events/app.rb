@@ -13,6 +13,7 @@ module AuctionFunCore
 
       register_event("users.authentication")
       register_event("users.registration")
+      register_event("users.confirmation")
     end
   end
 end

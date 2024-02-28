@@ -13,3 +13,7 @@
 # Local variable enviroment
 .env.development
 .env.test
+
+# Redis dump
+
+dump.rdb
