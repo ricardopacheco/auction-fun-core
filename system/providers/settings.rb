@@ -24,5 +24,7 @@ AuctionFunCore::Application.register_provider(:settings, from: :dry_system) do
       constructor: Dry::Types["string"].constrained(filled: true)
     setting :smtp_port, default: ENV.fetch("SMTP_PORT"),
       constructor: Dry::Types["string"].constrained(filled: true)
+    setting :default_currency, constructor: Dry::Types["string"].constrained(filled: true),
+      default: Money::Currency.new(ENV.fetch("DEFAULT_CURRENCY"))
   end
 end

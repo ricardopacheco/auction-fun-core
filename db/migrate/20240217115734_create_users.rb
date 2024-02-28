@@ -9,6 +9,8 @@ ROM::SQL.migration do
       column :phone, String, null: false
       column :password_digest, String, null: false
       column :active, TrueClass, null: false, default: true
+      column :balance_cents, Integer, null: false, default: 0
+      column :balance_currency, String, null: false, default: "USD"
       column :email_confirmation_token, String, size: 20
       column :phone_confirmation_token, String, size: 6
       column :email_confirmation_at, DateTime

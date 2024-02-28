@@ -28,6 +28,10 @@ module AuctionFunCore
       def info
         attributes.except(:password_digest)
       end
+
+      def balance
+        Money.new(balance_cents, balance_currency)
+      end
     end
   end
 end
