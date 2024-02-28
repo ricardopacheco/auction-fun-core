@@ -8,6 +8,7 @@ Factory.define(:user, struct_namespace: AuctionFunCore::Entities) do |f|
   f.email_confirmation_at { Time.current - 1.day }
   f.phone_confirmation_at { Time.current - 1.day }
   f.confirmed_at { Time.current }
+  f.active { true }
 
   f.trait :inactive do |t|
     t.active { false }
@@ -33,5 +34,10 @@ Factory.define(:user, struct_namespace: AuctionFunCore::Entities) do |f|
 
   f.trait :with_phone_confirmation_token do |t|
     t.phone_confirmation_token { AuctionFunCore::Business::TokenGenerator.generate_phone_token }
+  end
+
+  f.trait :with_balance do |t|
+    t.balance_cents { 1000 }
+    t.balance_currency { Money.default_currency }
   end
 end
