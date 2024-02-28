@@ -13,6 +13,8 @@ module AuctionFunCore
         attribute :email, Types::String
         attribute :phone, Types::String
         attribute :active, Types::Bool
+        attribute :balance_cents, Types::Integer
+        attribute :balance_currency, Types::String
 
         primary_key :id
       end

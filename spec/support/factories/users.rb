@@ -38,6 +38,6 @@ Factory.define(:user, struct_namespace: AuctionFunCore::Entities) do |f|
 
   f.trait :with_balance do |t|
     t.balance_cents { 1000 }
-    t.balance_currency { Money.default_currency }
+    t.balance_currency { AuctionFunCore::Application[:settings].default_currency }
   end
 end

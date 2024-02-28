@@ -5,10 +5,6 @@ require "dry/system/provider_sources"
 # This file uses the rom gem to define a database configuration container
 # and registers it with our application under the container key.
 AuctionFunCore::Application.register_provider(:settings, from: :dry_system) do
-  before :prepare do
-    require "money"
-  end
-
   settings do
     setting :logger, default: Logger.new($stdout)
     setting :database_url, default: ENV.fetch("DATABASE_URL"),
@@ -25,6 +21,6 @@ AuctionFunCore::Application.register_provider(:settings, from: :dry_system) do
     setting :smtp_port, default: ENV.fetch("SMTP_PORT"),
       constructor: Dry::Types["string"].constrained(filled: true)
     setting :default_currency, constructor: Dry::Types["string"].constrained(filled: true),
-      default: Money::Currency.new(ENV.fetch("DEFAULT_CURRENCY"))
+      default: Money.default_currency
   end
 end
