@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [0.6.1] - 2024-02-28
+
+### Added
+
+- Add configuration to handle monetary values.
+- Add required environment variable `DEFAULT_CURRENCY` to set the default currency.
+- Tests for entities.
+
 ## [0.6.0] - 2024-02-24
 
 ### Added

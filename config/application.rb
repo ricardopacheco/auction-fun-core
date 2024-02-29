@@ -9,10 +9,12 @@ require "dry/system"
 require "dry/system/loader/autoloading"
 require "dry/auto_inject"
 require "dry/types"
+require "money"
 
 module AuctionFunCore
   # Main class (Add doc)
   class Application < Dry::System::Container
+    Money.default_currency = ENV.fetch("DEFAULT_CURRENCY")
     I18n.load_path += Dir[File.expand_path("i18n/**/*.{rb,yml}")]
     I18n.available_locales = %w[en-US pt-BR]
     I18n.default_locale = "pt-BR"
