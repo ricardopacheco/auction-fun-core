@@ -5,6 +5,24 @@ module AuctionFunCore
     # Event class that can listen business events.
     # @see https://dry-rb.org/gems/dry-events/main/#event-listeners
     class Listener
+      # Listener for to *auctions.created* event.
+      # @param auction [ROM::Struct::Auction] the auction object
+      def on_auctions_created(auction)
+        logger("Create auction with: #{auction.to_h}")
+      end
+
+      # Listener for to *auctions.started* event.
+      # @param auction [ROM::Struct::Auction] the auction object
+      def on_auctions_started(auction)
+        logger("Started auction with: #{auction.to_h}")
+      end
+
+      # Listener for to *auctions.finished* event.
+      # @param auction [ROM::Struct::Auction] the auction object
+      def on_auctions_finished(auction)
+        logger("Finished auction: #{auction.to_h}")
+      end
+
       # Listener for to *staffs.authentication* event.
       # @param attributes [Hash] Authentication attributes
       # @option staff_id [Integer] Staff ID

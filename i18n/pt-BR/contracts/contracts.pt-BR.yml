@@ -60,9 +60,13 @@ pt-BR:
           password_confirmation: "não corresponde à senha"
           login_not_found: "Credenciais inválidas"
           inactive_account: "Sua conta está suspensa ou inativa"
+          future: "deve ser no futuro"
         macro:
           email_format: "não é um email válido"
           login_format: "login inválido"
           name_format: "deve ter entre %{min} e %{max} caracteres"
           password_format: "deve ter entre %{min} e %{max} caracteres"
           phone_format: "não é um número de celular válido"
+        auction_context:
+          create:
+            finished_at: "deve ser depois da hora de início"

@@ -8,6 +8,10 @@ module AuctionFunCore
       # @!parser include Dry::Events::Publisher[:app]
       include Dry::Events::Publisher[:app]
 
+      register_event("auctions.created")
+      register_event("auctions.started")
+      register_event("auctions.finished")
+
       register_event("staffs.authentication")
       register_event("staffs.registration")
 
