@@ -1,5 +1,17 @@
 ## [Unreleased]
 
+## [0.7.0] - 2024-02-29
+
+### Added
+
+- Auction entity and your context to handle auction creation business rules.
+- Internal Processor module in auctions to handle specific actions.
+- User-defined Data Types (custom types) for postgres.
+
+### Fixed
+
+- `en-US` i18n contract messages.
+
 ## [0.6.1] - 2024-02-28
 
 ### Added
