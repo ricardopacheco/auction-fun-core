@@ -54,16 +54,19 @@ en-US:
               default: "length must be %{size}"
               range: "length must be within %{size_left} - %{size_right}"
       custom:
-        errors:
-          default:
-            taken: "has already been taken"
-            not_found: "not found"
-            password_confirmation: "doesn't match password"
-            login_not_found: "Invalid credentials"
-            inactive_account: "Your account is suspended or inactive"
-          macro:
-            email_format: "need to be a valid email"
-            login_format: "invalid login"
-            name_format: "must be between %{min} and %{max} characters"
-            password_format: "must be between %{min} and %{max} characters"
-            phone_format: "need to be a valid mobile number"
+        default:
+          taken: "has already been taken"
+          not_found: "not found"
+          password_confirmation: "doesn't match password"
+          login_not_found: "Invalid credentials"
+          inactive_account: "Your account is suspended or inactive"
+          future: "must be in the future"
+        macro:
+          email_format: "need to be a valid email"
+          login_format: "invalid login"
+          name_format: "must be between %{min} and %{max} characters"
+          password_format: "must be between %{min} and %{max} characters"
+          phone_format: "need to be a valid mobile number"
+        auction_context:
+          create:
+            finished_at: "must be after started time"
