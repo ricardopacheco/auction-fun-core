@@ -7,14 +7,19 @@ module AuctionFunCore
       class CreateContract < Contracts::ApplicationContract
         KINDS = Relations::Auctions::KINDS.values
         REQUIRED_FINISHED_AT = KINDS - ["penny"]
+        MIN_TITLE_LENGTH = 6
+        MAX_TITLE_LENGTH = 255
+        STOPWATCH_MIN_VALUE = 15
+        STOPWATCH_MAX_VALUE = 60
+
         option :staff_repo, default: proc { Repos::StaffContext::StaffRepository.new }
 
         # @param [Hash] opts Sets an allowed list of parameters, as well as some initial validations.
         params do
-          required(:title).filled(:string, size?: (3..255))
+          required(:staff_id).filled(:integer)
+          required(:title).filled(:string, size?: (MIN_TITLE_LENGTH..MAX_TITLE_LENGTH))
           required(:kind).value(included_in?: KINDS)
           required(:started_at).filled(:time)
-          required(:staff_id).filled(:integer)
           optional(:description)
           optional(:finished_at).filled(:time)
           optional(:initial_bid_cents).filled(:integer)
@@ -84,8 +89,13 @@ module AuctionFunCore
           key.failure(I18n.t("contracts.errors.filled?")) if !key? && values[:kind] == "penny"
 
           # Must be an integer between 15 and 60.
-          if key? && values[:kind] == "penny" && !value.between?(15, 60)
-            key.failure(I18n.t("contracts.errors.included_in?.arg.range", list_left: 15, list_right: 60))
+          if key? && values[:kind] == "penny" && !value.between?(STOPWATCH_MIN_VALUE, STOPWATCH_MAX_VALUE)
+            key.failure(
+              I18n.t(
+                "contracts.errors.included_in?.arg.range",
+                list_left: STOPWATCH_MIN_VALUE, list_right: STOPWATCH_MAX_VALUE
+              )
+            )
           end
         end
       end

@@ -2,6 +2,7 @@
 
 RSpec.describe AuctionFunCore::Contracts::AuctionContext::Processor::StartContract, type: :contract do
   let(:auction) { Factory[:auction, :default_standard] }
+  let(:kinds) { described_class::KINDS.join(", ") }
 
   describe "#call" do
     subject(:contract) { described_class.new.call(attributes) }
@@ -14,6 +15,10 @@ RSpec.describe AuctionFunCore::Contracts::AuctionContext::Processor::StartContra
         expect(contract.errors[:auction_id]).to include(I18n.t("contracts.errors.key?"))
         expect(contract.errors[:kind]).to include(I18n.t("contracts.errors.key?"))
       end
+    end
+
+    it_behaves_like "validate_stopwatch_contract" do
+      let(:auction) { Factory[:auction, :default_penny] }
     end
 
     context "when auction_id is not founded on database" do
@@ -31,35 +36,8 @@ RSpec.describe AuctionFunCore::Contracts::AuctionContext::Processor::StartContra
       it "expect failure with error messages" do
         expect(contract).to be_failure
         expect(contract.errors[:kind]).to include(
-          I18n.t(
-            "contracts.errors.included_in?.arg.default",
-            list: described_class::KINDS.join(", ")
-          )
+          I18n.t("contracts.errors.included_in?.arg.default", list: kinds)
         )
-      end
-    end
-
-    describe "stopwatch" do
-      let(:auction) { Factory[:auction, :default_penny] }
-
-      context "when kind is penny and stopwatch is blank" do
-        let(:attributes) { {auction_id: auction.id, kind: auction.kind} }
-
-        it "expect failure with error message" do
-          expect(contract).to be_failure
-          expect(contract.errors[:stopwatch]).to include(I18n.t("contracts.errors.filled?"))
-        end
-      end
-
-      context "when kind is penny and stopwatch is not within the allowed range" do
-        let(:attributes) { {auction_id: auction.id, kind: auction.kind, stopwatch: 100} }
-
-        it "expect failure with error message" do
-          expect(contract).to be_failure
-          expect(contract.errors[:stopwatch]).to include(
-            I18n.t("contracts.errors.included_in?.arg.range", list_left: 15, list_right: 60)
-          )
-        end
       end
     end
 

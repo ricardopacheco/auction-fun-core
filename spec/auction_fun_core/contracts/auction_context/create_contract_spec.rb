@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe AuctionFunCore::Contracts::AuctionContext::CreateContract, type: :contract do
+  let(:min) { described_class::MIN_TITLE_LENGTH }
+  let(:max) { described_class::MAX_TITLE_LENGTH }
+  let(:stopwatch_min_value) { described_class::STOPWATCH_MIN_VALUE }
+  let(:stopwatch_max_value) { described_class::STOPWATCH_MAX_VALUE }
+  let(:kinds) { described_class::KINDS.join(", ") }
+
   describe "#call" do
     subject(:contract) { described_class.new.call(attributes) }
 
@@ -37,19 +43,32 @@ RSpec.describe AuctionFunCore::Contracts::AuctionContext::CreateContract, type: 
       end
     end
 
-    describe "#started_at" do
-      context "when is less than or equal to now" do
-        let(:attributes) { {started_at: 3.days.ago} }
+    describe "#title" do
+      let(:attributes) { {title: "abc"} }
 
+      context "when the characters in the title are outside the allowed range" do
         it "expect failure with error messages" do
-          expect(contract).to be_failure
-          expect(contract.errors[:started_at])
-            .to include(I18n.t("contracts.errors.custom.default.future"))
+          expect(subject).to be_failure
+
+          expect(subject.errors[:title]).to include(
+            I18n.t("contracts.errors.size?.value.string.arg.range", size_left: min, size_right: max)
+          )
         end
       end
     end
 
     describe "#kind" do
+      context "when kind is outside of default list" do
+        let(:attributes) { {kind: "unknown"} }
+
+        it "expect failure with error messages" do
+          expect(contract).to be_failure
+          expect(contract.errors[:kind]).to include(
+            I18n.t("contracts.errors.included_in?.arg.default", list: kinds)
+          )
+        end
+      end
+
       context "when kind is standard or closed and finished_at is blank" do
         let(:attributes) { {kind: "standard", started_at: 3.hours.from_now} }
 
@@ -65,6 +84,18 @@ RSpec.describe AuctionFunCore::Contracts::AuctionContext::CreateContract, type: 
         it "expect failure with error messages" do
           expect(contract).to be_failure
           expect(contract.errors[:finished_at]).to include(I18n.t("contracts.errors.filled?"))
+        end
+      end
+    end
+
+    describe "#started_at" do
+      context "when is less than or equal to now" do
+        let(:attributes) { {started_at: 3.days.ago} }
+
+        it "expect failure with error messages" do
+          expect(contract).to be_failure
+          expect(contract.errors[:started_at])
+            .to include(I18n.t("contracts.errors.custom.default.future"))
         end
       end
     end
@@ -136,7 +167,10 @@ RSpec.describe AuctionFunCore::Contracts::AuctionContext::CreateContract, type: 
         it "expect failure with error message" do
           expect(contract).to be_failure
           expect(contract.errors[:stopwatch]).to include(
-            I18n.t("contracts.errors.included_in?.arg.range", list_left: 15, list_right: 60)
+            I18n.t(
+              "contracts.errors.included_in?.arg.range",
+              list_left: stopwatch_min_value, list_right: stopwatch_max_value
+            )
           )
         end
       end
