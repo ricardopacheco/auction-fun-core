@@ -12,6 +12,8 @@ module AuctionFunCore
       register_event("auctions.started")
       register_event("auctions.finished")
 
+      register_event("bids.created")
+
       register_event("staffs.authentication")
       register_event("staffs.registration")
 

@@ -1,5 +1,16 @@
 ## [Unreleased]
 
+## [0.8.0] - 2024-03-06
+
+### Added
+
+- Bid entity and your context to handle bid creation business rules.
+- Internal Processor module in bids to handle specific types.
+
+### Fixed
+
+- auction migration name fix.
+
 ## [0.7.0] - 2024-02-29
 
 ### Added
