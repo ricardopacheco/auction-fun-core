@@ -32,6 +32,7 @@ module AuctionFunCore
 
         associations do
           belongs_to :staff, as: :staff, relation: :staffs
+          has_many :bids, as: :bids, relation: :bids
         end
       end
 

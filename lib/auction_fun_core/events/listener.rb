@@ -23,6 +23,12 @@ module AuctionFunCore
         logger("Finished auction: #{auction.to_h}")
       end
 
+      # Listener for to *bids.created* event.
+      # @param event [Integer] Auction ID
+      def on_bids_created(bid)
+        logger("Create bid with: #{bid.to_h}")
+      end
+
       # Listener for to *staffs.authentication* event.
       # @param attributes [Hash] Authentication attributes
       # @option staff_id [Integer] Staff ID
