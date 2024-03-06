@@ -8,14 +8,13 @@ module AuctionFunCore
         # Contract class for start auctions.
         #
         class StartContract < Contracts::ApplicationContract
-          STOPWATCH_MIN_VALUE = 15
-          STOPWATCH_MAX_VALUE = 60
-          KINDS = Relations::Auctions::KINDS.values
+          include AuctionFunCore::Business::Configuration
+
           option :auction_repo, default: proc { Repos::AuctionContext::AuctionRepository.new }
 
           params do
             required(:auction_id).filled(:integer)
-            required(:kind).value(included_in?: KINDS)
+            required(:kind).value(included_in?: AUCTION_KINDS)
             optional(:stopwatch).filled(:integer)
           end
 
@@ -33,10 +32,10 @@ module AuctionFunCore
             key.failure(I18n.t("contracts.errors.filled?")) if !key? && values[:kind] == "penny"
 
             # Must be an integer between 15 and 60.
-            if key? && values[:kind] == "penny" && !value.between?(STOPWATCH_MIN_VALUE, STOPWATCH_MAX_VALUE)
+            if key? && values[:kind] == "penny" && !value.between?(AUCTION_STOPWATCH_MIN_VALUE, AUCTION_STOPWATCH_MAX_VALUE)
               key.failure(
                 I18n.t("contracts.errors.included_in?.arg.range",
-                  list_left: STOPWATCH_MIN_VALUE, list_right: STOPWATCH_MAX_VALUE)
+                  list_left: AUCTION_STOPWATCH_MIN_VALUE, list_right: AUCTION_STOPWATCH_MAX_VALUE)
               )
             end
           end

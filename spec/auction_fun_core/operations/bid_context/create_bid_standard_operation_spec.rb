@@ -55,7 +55,7 @@ RSpec.describe AuctionFunCore::Operations::BidContext::CreateBidStandardOperatio
     subject(:operation) { described_class.new.call(attributes) }
 
     context "when contract are not valid" do
-      let(:attributes) { {} }
+      let(:attributes) { Dry::Core::Constants::EMPTY_HASH }
 
       it "expect return failure with error messages" do
         expect(operation).to be_failure

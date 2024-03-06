@@ -9,7 +9,7 @@ RSpec.describe AuctionFunCore::Contracts::UserContext::EmailConfirmationContract
     subject(:contract) { described_class.new.call(attributes) }
 
     context "when params are blank" do
-      let(:attributes) { {} }
+      let(:attributes) { Dry::Core::Constants::EMPTY_HASH }
 
       it "expect failure with error messages" do
         expect(contract).to be_failure

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 shared_examples "validate_password_contract" do |factory_name|
-  let(:min) { AuctionFunCore::Contracts::ApplicationContract::MIN_PASSWORD_LENGTH }
-  let(:max) { AuctionFunCore::Contracts::ApplicationContract::MAX_PASSWORD_LENGTH }
+  let(:min) { AuctionFunCore::Business::Configuration::MIN_PASSWORD_LENGTH }
+  let(:max) { AuctionFunCore::Business::Configuration::MAX_PASSWORD_LENGTH }
   let(:factory) { Factory[factory_name] }
 
   context "when password characters are outside the allowed range" do

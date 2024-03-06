@@ -55,7 +55,7 @@ RSpec.describe AuctionFunCore::Operations::BidContext::CreateBidClosedOperation,
     subject(:operation) { described_class.new.call(attributes) }
 
     context "when contract are not valid" do
-      let(:attributes) { {} }
+      let(:attributes) { Dry::Core::Constants::EMPTY_HASH }
 
       it "expect not persist new bid on database" do
         expect(bid_repository.count).to be_zero

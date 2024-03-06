@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe AuctionFunCore::Contracts::AuctionContext::CreateContract, type: :contract do
-  let(:min) { described_class::MIN_TITLE_LENGTH }
-  let(:max) { described_class::MAX_TITLE_LENGTH }
-  let(:stopwatch_min_value) { described_class::STOPWATCH_MIN_VALUE }
-  let(:stopwatch_max_value) { described_class::STOPWATCH_MAX_VALUE }
-  let(:kinds) { described_class::KINDS.join(", ") }
+  let(:min) { described_class::AUCTION_MIN_TITLE_LENGTH }
+  let(:max) { described_class::AUCTION_MAX_TITLE_LENGTH }
+  let(:stopwatch_min_value) { described_class::AUCTION_STOPWATCH_MIN_VALUE }
+  let(:stopwatch_max_value) { described_class::AUCTION_STOPWATCH_MAX_VALUE }
+  let(:kinds) { described_class::AUCTION_KINDS.join(", ") }
 
   describe "#call" do
     subject(:contract) { described_class.new.call(attributes) }
@@ -151,29 +151,8 @@ RSpec.describe AuctionFunCore::Contracts::AuctionContext::CreateContract, type: 
       end
     end
 
-    describe "stopwatch" do
-      context "when kind is penny and stopwatch is blank" do
-        let(:attributes) { {kind: "penny", initial_bid_cents: 1000} }
-
-        it "expect failure with error message" do
-          expect(contract).to be_failure
-          expect(contract.errors[:stopwatch]).to include(I18n.t("contracts.errors.filled?"))
-        end
-      end
-
-      context "when kind is penny and stopwatch is not within the allowed range" do
-        let(:attributes) { {kind: "penny", initial_bid_cents: 1000, stopwatch: 100} }
-
-        it "expect failure with error message" do
-          expect(contract).to be_failure
-          expect(contract.errors[:stopwatch]).to include(
-            I18n.t(
-              "contracts.errors.included_in?.arg.range",
-              list_left: stopwatch_min_value, list_right: stopwatch_max_value
-            )
-          )
-        end
-      end
+    it_behaves_like "validate_stopwatch_contract" do
+      let(:auction) { Factory.structs[:auction, kind: :penny, initial_bid_cents: 1000] }
     end
   end
 end

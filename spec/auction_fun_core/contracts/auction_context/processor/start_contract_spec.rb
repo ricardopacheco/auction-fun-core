@@ -2,7 +2,7 @@
 
 RSpec.describe AuctionFunCore::Contracts::AuctionContext::Processor::StartContract, type: :contract do
   let(:auction) { Factory[:auction, :default_standard] }
-  let(:kinds) { described_class::KINDS.join(", ") }
+  let(:kinds) { described_class::AUCTION_KINDS.join(", ") }
 
   describe "#call" do
     subject(:contract) { described_class.new.call(attributes) }
