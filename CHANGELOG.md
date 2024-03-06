@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+## [0.8.1] - 2024-03-06
+
+### Added
+
+- Added configuration constants module to store fixed values referring to business rules.
+
 ## [0.8.0] - 2024-03-06
 
 ### Added

@@ -42,7 +42,13 @@ RSpec.describe AuctionFunCore::Contracts::AuctionContext::Processor::StartContra
     end
 
     context "when attributes are valid" do
-      let(:attributes) { {auction_id: auction.id, kind: auction.kind, stopwatch: 15} }
+      let(:attributes) do
+        {
+          auction_id: auction.id,
+          kind: auction.kind,
+          stopwatch: described_class::AUCTION_STOPWATCH_MIN_VALUE
+        }
+      end
 
       it "expect return success" do
         expect(contract).to be_success
