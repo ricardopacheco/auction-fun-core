@@ -49,7 +49,7 @@ module AuctionFunCore
         end
 
         # Validation for value bid.
-        # must be greater than or equal to the auction's initial bid.
+        # must be greater than or equal to the auction's minimal bid.
         rule(:value_cents) do |context:|
           standard_auction_valid_bid?(key, value, context[:auction].minimal_bid_cents)
         end
