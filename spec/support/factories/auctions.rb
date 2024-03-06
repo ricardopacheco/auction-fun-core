@@ -95,7 +95,7 @@ Factory.define(:auction, struct_namespace: AuctionFunCore::Entities) do |f|
   f.trait :default_penny do |t|
     t.kind { "penny" }
 
-    t.stopwatch { 15 }
+    t.stopwatch { AuctionFunCore::Business::Configuration::AUCTION_STOPWATCH_MIN_VALUE }
     t.started_at { 1.hour.from_now }
   end
 

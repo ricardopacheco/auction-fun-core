@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 shared_examples "validate_name_contract" do |factory_name|
-  let(:min) { AuctionFunCore::Contracts::ApplicationContract::MIN_NAME_LENGTH }
-  let(:max) { AuctionFunCore::Contracts::ApplicationContract::MAX_NAME_LENGTH }
+  let(:min) { AuctionFunCore::Business::Configuration::MIN_NAME_LENGTH }
+  let(:max) { AuctionFunCore::Business::Configuration::MAX_NAME_LENGTH }
   let(:factory) { Factory[factory_name] }
 
   context "when the characters in the name are outside the allowed range" do

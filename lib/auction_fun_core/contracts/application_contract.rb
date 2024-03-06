@@ -7,12 +7,10 @@ module AuctionFunCore
     # Abstract base class for contracts.
     # @abstract
     class ApplicationContract < Dry::Validation::Contract
+      include AuctionFunCore::Business::Configuration
+
       I18N_MACRO_SCOPE = "contracts.errors.custom.macro"
       EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d-]+(\.[a-z\d-]+)*\.[a-z]+\z/i
-      MIN_NAME_LENGTH = 6
-      MAX_NAME_LENGTH = 128
-      MIN_PASSWORD_LENGTH = 6
-      MAX_PASSWORD_LENGTH = 128
 
       config.messages.backend = :i18n
       config.messages.default_locale = I18n.default_locale
