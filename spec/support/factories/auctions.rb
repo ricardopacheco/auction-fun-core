@@ -59,6 +59,7 @@ Factory.define(:auction, struct_namespace: AuctionFunCore::Entities) do |f|
 
   f.trait :default_standard do |t|
     t.kind { "standard" }
+
     t.started_at { 1.hour.from_now }
     t.finished_at { 1.week.from_now }
     t.initial_bid_cents { 100 }
@@ -68,6 +69,7 @@ Factory.define(:auction, struct_namespace: AuctionFunCore::Entities) do |f|
   f.trait :default_running_standard do |t|
     t.kind { "standard" }
     t.status { "running" }
+
     t.started_at { 1.hour.ago }
     t.finished_at { 1.day.from_now }
     t.initial_bid_cents { 100 }
@@ -77,6 +79,7 @@ Factory.define(:auction, struct_namespace: AuctionFunCore::Entities) do |f|
   f.trait :default_finished_standard do |t|
     t.kind { "standard" }
     t.status { "finished" }
+
     t.started_at { 2.days.ago }
     t.finished_at { 1.day.ago }
     t.initial_bid_cents { 100 }
@@ -86,6 +89,7 @@ Factory.define(:auction, struct_namespace: AuctionFunCore::Entities) do |f|
   f.trait :default_paused_standard do |t|
     t.kind { "standard" }
     t.status { "paused" }
+
     t.started_at { 1.hour.ago }
     t.finished_at { 1.day.from_now }
     t.initial_bid_cents { 100 }
@@ -102,6 +106,7 @@ Factory.define(:auction, struct_namespace: AuctionFunCore::Entities) do |f|
   f.trait :default_running_penny do |t|
     t.kind { "penny" }
     t.status { "running" }
+
     t.started_at { 1.hour.ago }
     t.finished_at { 60.seconds.from_now }
     t.initial_bid_cents { 100 }
@@ -118,6 +123,7 @@ Factory.define(:auction, struct_namespace: AuctionFunCore::Entities) do |f|
   f.trait :default_running_closed do |t|
     t.kind { "closed" }
     t.status { "running" }
+
     t.started_at { 1.hour.ago }
     t.finished_at { 1.day.from_now }
     t.initial_bid_cents { 100 }
