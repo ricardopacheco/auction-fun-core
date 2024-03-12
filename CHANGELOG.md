@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+## [0.8.3] - 2024-03-12
+
+### Added
+
+- Processing actions to pause and unpause an auction.
+
 ## [0.8.1] - 2024-03-06
 
 ### Added
