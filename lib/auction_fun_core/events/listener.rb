@@ -23,6 +23,18 @@ module AuctionFunCore
         logger("Finished auction: #{auction.to_h}")
       end
 
+      # Listener for to *auctions.paused* event.
+      # @param event [ROM::Struct::Auction] the auction object
+      def on_auctions_paused(auction)
+        logger("Paused auction with: #{auction.to_h}")
+      end
+
+      # Listener for to *auctions.unpaused* event.
+      # @param event [ROM::Struct::Auction] the auction object
+      def on_auctions_unpaused(auction)
+        logger("Unpaused auction with: #{auction.to_h}")
+      end
+
       # Listener for to *bids.created* event.
       # @param event [Integer] Auction ID
       def on_bids_created(bid)
