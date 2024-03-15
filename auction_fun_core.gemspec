@@ -33,7 +33,24 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   # Uncomment to register a new dependency of your gem
-  # spec.add_dependency "example-gem", "~> 1.0"
+  spec.add_dependency "activesupport", "7.1.3.2"
+  spec.add_dependency "bcrypt", "3.1.20"
+  spec.add_dependency "dotenv", "3.1.0"
+  spec.add_dependency "dry-events", "1.0.1"
+  spec.add_dependency "dry-matcher", "1.0.0"
+  spec.add_dependency "dry-monads", "1.6.0"
+  spec.add_dependency "dry-system", "1.0.1"
+  spec.add_dependency "dry-validation", "1.10.0"
+  spec.add_dependency "idlemailer", "2.2.0"
+  spec.add_dependency "money", "6.19.0"
+  spec.add_dependency "pg", "1.5.6"
+  spec.add_dependency "phonelib", "0.8.7"
+  spec.add_dependency "rake", "13.1.0"
+  spec.add_dependency "rom", "5.3.0"
+  spec.add_dependency "rom-sql", "3.6.2"
+  spec.add_dependency "sidekiq", "7.2.2"
+  spec.add_dependency "yard", "0.9.36"
+  spec.add_dependency "zeitwerk", "2.6.13"
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
