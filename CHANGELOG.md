@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.8.4] - 2024-03-15
+
+- Adjusting dependencies so that they are automatically loaded by the external Gemfile.
+
 ## [0.8.3] - 2024-03-12
 
 ### Added
