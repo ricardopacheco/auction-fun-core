@@ -21,10 +21,10 @@ module AuctionFunCore
             Dry::Matcher::ResultMatcher.call(operation, &block)
           end
 
-          # @todo Add more actions
-          #   Generate auction statistics and save in JSONB (statistics field)
-          #   Send email to winner with payment info.
-          #   Send email for bidders with user bid stats
+          # It only performs the basic processing of completing an auction.
+          # It just changes the status at the database level and triggers the finished event.
+          # @param auction_id [Integer] Auction ID
+          # @return [Dry::Monads::Result::Success, Dry::Monads::Result::Failure]
           def call(auction_id)
             yield validate(auction_id: auction_id)
 

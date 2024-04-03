@@ -3,7 +3,7 @@
 module AuctionFunCore
   module Relations
     # SQL relation for bids
-    # @see https://rom-rb.org/5.2/learn/sql/relations/
+    # @see https://rom-rb.org/5.0/learn/sql/relations/
     class Bids < ROM::Relation[:sql]
       use :pagination, per_page: 3
 

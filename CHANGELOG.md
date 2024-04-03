@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+## [0.8.5] - 2024-04-03
+
+### Added
+
+- Seed data for rapid develpment
+
 ## [0.8.4] - 2024-03-15
 
 - Adjusting dependencies so that they are automatically loaded by the external Gemfile.
