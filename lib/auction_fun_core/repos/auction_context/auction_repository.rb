@@ -10,6 +10,12 @@ module AuctionFunCore
         struct_namespace Entities
         commands :create, update: :by_pk, delete: :by_pk
 
+        # Returns all auctions in the database.
+        # @return [Array<ROM::Struct::Auction>, []]
+        def all
+          auctions.to_a
+        end
+
         # Returns the total number of auctions in database.
         # @return [Integer]
         def count

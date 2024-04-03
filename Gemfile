@@ -6,7 +6,7 @@ source "https://rubygems.org"
 gemspec
 
 group :development, :test do
-  gem "faker", "3.2.3"
+  gem "faker", "3.3.1"
   gem "pry", "0.14.2"
   gem "rspec", "3.13.0"
   gem "standard", "1.35.1"
