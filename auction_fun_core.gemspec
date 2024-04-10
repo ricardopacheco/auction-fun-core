@@ -10,11 +10,11 @@ Gem::Specification.new do |spec|
 
   spec.summary = "It's a lib that contains all auctionfun's business rules!"
   spec.description = "Practical application of clean architecture in a real business idea using ruby."
-  spec.homepage = "https://github.com/ricardopacheco/auction-fun-core"
+  spec.homepage = "https://rubygems.org/gems/auction_fun_core"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.3.0"
 
-  spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
+  spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/ricardopacheco/auction-fun-core"
