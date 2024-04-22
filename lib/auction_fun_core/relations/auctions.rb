@@ -41,15 +41,73 @@ module AuctionFunCore
       auto_struct(true)
 
       def all(page = 1, per_page = 10, options = {bidders_count: 3})
+        raise "Invalid argument" unless page.is_a?(Integer) && per_page.is_a?(Integer)
+
         offset = ((page - 1) * per_page)
 
-        read(all_auctions_with_bid_info(per_page, offset, options))
+        read("
+          SELECT a.id, a.title, a.description, a.kind, a.status, a.started_at, a.finished_at, a.stopwatch, a.initial_bid_cents,
+          (SELECT COUNT(*) FROM (SELECT * FROM bids WHERE bids.auction_id = a.id) dt) AS total_bids,
+          CASE
+          WHEN a.kind = 'standard' THEN
+            json_build_object(
+              'current', a.minimal_bid_cents,
+              'minimal', a.minimal_bid_cents,
+              'bidders', COALESCE(
+                json_agg(json_build_object('id', bi.id, 'user_id', users.id, 'name', users.name, 'value', bi.value_cents, 'date', bi.created_at) ORDER BY value_cents DESC)
+                FILTER (where bi.id IS NOT NULL AND users.id IS NOT NULL), '[]'::json
+              )
+            )
+          WHEN a.kind = 'penny' THEN
+            json_build_object(
+              'value', a.initial_bid_cents,
+              'bidders', COALESCE(
+                json_agg(json_build_object('id', bi.id, 'user_id', users.id, 'name', users.name, 'value', bi.value_cents, 'date', bi.created_at) ORDER BY value_cents DESC)
+                FILTER (where bi.id IS NOT NULL AND users.id IS NOT NULL), '[]'::json
+              )
+            )
+          WHEN a.kind = 'closed' THEN
+            json_build_object('minimal', (a.initial_bid_cents + (a.initial_bid_cents * 0.10))::int)
+          END as bids
+        FROM auctions as a
+        LEFT JOIN LATERAL (SELECT * FROM bids WHERE auction_id = a.id ORDER BY value_cents DESC LIMIT #{options[:bidders_count]}) as bi ON a.id = bi.auction_id
+        LEFT JOIN users ON bi.user_id = users.id AND bi.auction_id = a.id
+        GROUP BY a.id
+        LIMIT #{per_page} OFFSET #{offset}")
       end
 
       def info(auction_id, options = {bidders_count: 3})
         raise "Invalid argument" unless auction_id.is_a?(Integer)
 
-        read(auction_with_bid_info(auction_id, options))
+        read("
+          SELECT a.id, a.title, a.description, a.kind, a.status, a.started_at, a.finished_at, a.stopwatch, a.initial_bid_cents,
+          (SELECT COUNT(*) FROM (SELECT * FROM bids WHERE bids.auction_id = #{auction_id}) dt) AS total_bids,
+          CASE
+          WHEN a.kind = 'standard' THEN
+            json_build_object(
+              'current', a.minimal_bid_cents,
+              'minimal', a.minimal_bid_cents,
+              'bidders', COALESCE(
+                json_agg(json_build_object('id', bi.id, 'user_id', users.id, 'name', users.name, 'value', bi.value_cents, 'date', bi.created_at) ORDER BY value_cents DESC)
+                FILTER (where bi.id IS NOT NULL AND users.id IS NOT NULL), '[]'::json
+              )
+            )
+          WHEN a.kind = 'penny' THEN
+            json_build_object(
+              'value', a.initial_bid_cents,
+              'bidders', COALESCE(
+                json_agg(json_build_object('id', bi.id, 'user_id', users.id, 'name', users.name, 'value', bi.value_cents, 'date', bi.created_at) ORDER BY value_cents DESC)
+                FILTER (where bi.id IS NOT NULL AND users.id IS NOT NULL), '[]'::json
+              )
+            )
+          WHEN a.kind = 'closed' THEN
+            json_build_object('minimal', (a.initial_bid_cents + (a.initial_bid_cents * 0.10))::int)
+          END as bids
+        FROM auctions as a
+        LEFT JOIN LATERAL (SELECT * FROM bids WHERE auction_id = a.id ORDER BY value_cents DESC LIMIT #{options[:bidders_count]}) as bi ON a.id = bi.auction_id AND a.id = #{auction_id}
+        LEFT JOIN users ON bi.user_id = users.id AND bi.auction_id = a.id
+        WHERE a.id = #{auction_id}
+        GROUP BY a.id")
       end
 
       # Retrieves the standard auction winner and other participating bidders for a specified auction.
@@ -151,7 +209,7 @@ module AuctionFunCore
       end
 
       def load_winner_statistics(auction_id, winner_id)
-        raise "Invalid argument" unless auction_id.is_a?(Integer) || winner_id.is_a?(Integer)
+        raise "Invalid argument" unless auction_id.is_a?(Integer) && winner_id.is_a?(Integer)
 
         read("SELECT a.id, COUNT(b.id) AS auction_total_bids, MAX(b.value_cents) AS winner_bid,
           date(a.finished_at) as auction_date,
@@ -175,7 +233,7 @@ module AuctionFunCore
       end
 
       def load_participant_statistics(auction_id, participant_id)
-        raise "Invalid argument" unless auction_id.is_a?(Integer) || participant_id.is_a?(Integer)
+        raise "Invalid argument" unless auction_id.is_a?(Integer) && participant_id.is_a?(Integer)
 
         read("SELECT a.id, COUNT(b.id) AS auction_total_bids, MAX(b.value_cents) AS winner_bid,
           date(a.finished_at) as auction_date,
@@ -196,70 +254,6 @@ module AuctionFunCore
         ) AS w ON a.id = w.auction_id
         WHERE a.id = #{auction_id}
         GROUP BY a.id")
-      end
-
-      private
-
-      def auction_with_bid_info(auction_id, options = {bidders_count: 3})
-        "SELECT a.id, a.title, a.description, a.kind, a.status, a.started_at, a.finished_at, a.stopwatch, a.initial_bid_cents,
-          (SELECT COUNT(*) FROM (SELECT * FROM bids WHERE bids.auction_id = #{auction_id}) dt) AS total_bids,
-          CASE
-          WHEN a.kind = 'standard' THEN
-            json_build_object(
-              'current', a.minimal_bid_cents,
-              'minimal', a.minimal_bid_cents,
-              'bidders', COALESCE(
-                json_agg(json_build_object('id', bi.id, 'user_id', users.id, 'name', users.name, 'value', bi.value_cents, 'date', bi.created_at) ORDER BY value_cents DESC)
-                FILTER (where bi.id IS NOT NULL AND users.id IS NOT NULL), '[]'::json
-              )
-            )
-          WHEN a.kind = 'penny' THEN
-            json_build_object(
-              'value', a.initial_bid_cents,
-              'bidders', COALESCE(
-                json_agg(json_build_object('id', bi.id, 'user_id', users.id, 'name', users.name, 'value', bi.value_cents, 'date', bi.created_at) ORDER BY value_cents DESC)
-                FILTER (where bi.id IS NOT NULL AND users.id IS NOT NULL), '[]'::json
-              )
-            )
-          WHEN a.kind = 'closed' THEN
-            json_build_object('minimal', (a.initial_bid_cents + (a.initial_bid_cents * 0.10))::int)
-          END as bids
-        FROM auctions as a
-        LEFT JOIN LATERAL (SELECT * FROM bids WHERE auction_id = a.id ORDER BY value_cents DESC LIMIT #{options[:bidders_count]}) as bi ON a.id = bi.auction_id AND a.id = #{auction_id}
-        LEFT JOIN users ON bi.user_id = users.id AND bi.auction_id = a.id
-        WHERE a.id = #{auction_id}
-        GROUP BY a.id"
-      end
-
-      def all_auctions_with_bid_info(per_page, offset, options = {bidders_count: 3})
-        "SELECT a.id, a.title, a.description, a.kind, a.status, a.started_at, a.finished_at, a.stopwatch, a.initial_bid_cents,
-          (SELECT COUNT(*) FROM (SELECT * FROM bids WHERE bids.auction_id = a.id) dt) AS total_bids,
-          CASE
-          WHEN a.kind = 'standard' THEN
-            json_build_object(
-              'current', a.minimal_bid_cents,
-              'minimal', a.minimal_bid_cents,
-              'bidders', COALESCE(
-                json_agg(json_build_object('id', bi.id, 'user_id', users.id, 'name', users.name, 'value', bi.value_cents, 'date', bi.created_at) ORDER BY value_cents DESC)
-                FILTER (where bi.id IS NOT NULL AND users.id IS NOT NULL), '[]'::json
-              )
-            )
-          WHEN a.kind = 'penny' THEN
-            json_build_object(
-              'value', a.initial_bid_cents,
-              'bidders', COALESCE(
-                json_agg(json_build_object('id', bi.id, 'user_id', users.id, 'name', users.name, 'value', bi.value_cents, 'date', bi.created_at) ORDER BY value_cents DESC)
-                FILTER (where bi.id IS NOT NULL AND users.id IS NOT NULL), '[]'::json
-              )
-            )
-          WHEN a.kind = 'closed' THEN
-            json_build_object('minimal', (a.initial_bid_cents + (a.initial_bid_cents * 0.10))::int)
-          END as bids
-        FROM auctions as a
-        LEFT JOIN LATERAL (SELECT * FROM bids WHERE auction_id = a.id ORDER BY value_cents DESC LIMIT #{options[:bidders_count]}) as bi ON a.id = bi.auction_id
-        LEFT JOIN users ON bi.user_id = users.id AND bi.auction_id = a.id
-        GROUP BY a.id
-        LIMIT #{per_page} OFFSET #{offset}"
       end
     end
   end

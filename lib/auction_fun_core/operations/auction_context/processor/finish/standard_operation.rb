@@ -71,7 +71,7 @@ module AuctionFunCore
             end
 
             def update_finished_auction(auction, summary)
-              attrs = {kind: auction.kind, status: "finished"}
+              attrs = {status: "finished"}
               attrs[:winner_id] = summary.winner_id if summary.winner_id.present?
 
               Success(attrs)

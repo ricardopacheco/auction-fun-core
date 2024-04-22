@@ -111,6 +111,7 @@ RSpec.describe AuctionFunCore::Operations::AuctionContext::Processor::StartOpera
       end
 
       context "when auction kind is equal to 'penny'" do
+        let(:auction) { Factory[:auction, :default_scheduled_closed, started_at: Time.current] }
         let(:stopwatch) { 45 }
         let(:old_finished_at) { auction.finished_at.strftime("%Y-%m-%d %H:%M:%S") }
         let(:new_finished_at) { stopwatch.seconds.from_now.strftime("%Y-%m-%d %H:%M:%S") }
