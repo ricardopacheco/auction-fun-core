@@ -11,7 +11,7 @@ RSpec.describe AuctionFunCore::Operations::BidContext::CreateBidPennyOperation, 
 
     context "when block is given" do
       context "when operation happens with success" do
-        let(:auction) { Factory[:auction, :default_penny] }
+        let(:auction) { Factory[:auction, :default_scheduled_penny] }
         let(:user) { Factory[:user] }
         let(:attributes) do
           Factory.structs[:bid, user: user, auction: auction]
@@ -70,7 +70,7 @@ RSpec.describe AuctionFunCore::Operations::BidContext::CreateBidPennyOperation, 
     end
 
     context "when contract are valid" do
-      let(:auction) { Factory[:auction, :default_penny] }
+      let(:auction) { Factory[:auction, :default_scheduled_penny] }
       let(:user) { Factory[:user] }
       let(:attributes) do
         Factory.structs[:bid, user: user, auction: auction]

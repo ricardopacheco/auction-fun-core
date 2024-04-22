@@ -21,7 +21,8 @@ module AuctionFunCore
         end
 
         def call(attributes)
-          values = yield validate(attributes)
+          values = yield validate_contract(attributes)
+          values = yield assign_default_values(values)
 
           auction_repository.transaction do |_t|
             @auction = yield persist(values)
@@ -38,12 +39,21 @@ module AuctionFunCore
         # of the informed attributes.
         # @param attrs [Hash] auction attributes
         # @return [Dry::Monads::Result::Success, Dry::Monads::Result::Failure]
-        def validate(attrs)
+        def validate_contract(attrs)
           contract = create_contract.call(attrs)
 
           return Failure(contract.errors.to_h) if contract.failure?
 
           Success(contract.to_h)
+        end
+
+        # By default, the auction status is set to 'scheduled'.
+        # @todo Refactor this method in the future to consider the status as of the auction start date.
+        # @param attrs [Hash] auction attributes
+        # @return [Dry::Monads::Result::Success]
+        def assign_default_values(attrs)
+          attrs[:status] = "scheduled"
+          Success(attrs)
         end
 
         # Calls the auction repository class to persist the attributes in the database.

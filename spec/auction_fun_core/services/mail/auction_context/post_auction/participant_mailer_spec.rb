@@ -10,7 +10,7 @@ RSpec.describe AuctionFunCore::Services::Mail::AuctionContext::PostAuction::Part
 
     context "when participant has invalid data" do
       let(:participant) { Factory.structs[:user, id: 1, email: nil] }
-      let(:auction) { Factory.structs[:auction, id: 1] }
+      let(:auction) { Factory.structs[:auction, :default_finished_standard, id: 1] }
       let(:statistics) { OpenStruct.new(auction_date: Date.current) }
 
       it "expect raise error" do

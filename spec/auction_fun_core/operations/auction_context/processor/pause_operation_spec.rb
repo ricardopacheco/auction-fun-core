@@ -65,7 +65,10 @@ RSpec.describe AuctionFunCore::Operations::AuctionContext::Processor::PauseOpera
       let(:attributes) { {auction_id: auction.id} }
 
       it "expect update status auction record on database" do
-        expect { operation }.to change { auction_repository.by_id(auction.id).status }.from("running").to("paused")
+        expect { operation }
+          .to change { auction_repository.by_id(auction.id).status }
+          .from("running")
+          .to("paused")
       end
 
       it "expect publish the auction pause event" do

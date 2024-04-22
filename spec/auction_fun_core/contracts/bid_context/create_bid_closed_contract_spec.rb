@@ -74,7 +74,7 @@ RSpec.describe AuctionFunCore::Contracts::BidContext::CreateBidClosedContract, t
       end
 
       context 'when auction kind is different of "closed"' do
-        let(:auction) { Factory[:auction, :default_penny] }
+        let(:auction) { Factory[:auction, :default_scheduled_penny] }
         let(:attributes) { {auction_id: auction.id} }
 
         it "expect failure with error messages" do

@@ -6,7 +6,7 @@ RSpec.describe AuctionFunCore::Repos::AuctionContext::AuctionRepository, type: :
   subject(:repo) { described_class.new }
 
   describe "#all" do
-    let!(:auction) { Factory[:auction, :default_standard] }
+    let!(:auction) { Factory[:auction, :default_scheduled_standard] }
 
     it "expect return all auctions" do
       expect(repo.all.size).to eq(1)
@@ -22,7 +22,7 @@ RSpec.describe AuctionFunCore::Repos::AuctionContext::AuctionRepository, type: :
     end
 
     context "when has auctions on repository" do
-      let!(:auction) { Factory[:auction, :default_standard] }
+      let!(:auction) { Factory[:auction, :default_scheduled_standard] }
 
       it "expect return total" do
         expect(repo.count).to eq(1)
@@ -32,7 +32,7 @@ RSpec.describe AuctionFunCore::Repos::AuctionContext::AuctionRepository, type: :
 
   describe "#by_id(id)" do
     context "when id is founded on repository" do
-      let!(:auction) { Factory[:auction, :default_standard] }
+      let!(:auction) { Factory[:auction, :default_scheduled_standard] }
 
       it "expect return rom object" do
         expect(repo.by_id(auction.id)).to be_a(AuctionFunCore::Entities::Auction)
@@ -48,7 +48,7 @@ RSpec.describe AuctionFunCore::Repos::AuctionContext::AuctionRepository, type: :
 
   describe "#by_id!(id)" do
     context "when id is founded on repository" do
-      let!(:auction) { Factory[:auction, :default_standard] }
+      let!(:auction) { Factory[:auction, :default_scheduled_standard] }
 
       it "expect return rom object" do
         expect(repo.by_id(auction.id)).to be_a(AuctionFunCore::Entities::Auction)

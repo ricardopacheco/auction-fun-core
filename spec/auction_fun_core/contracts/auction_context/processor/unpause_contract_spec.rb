@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe AuctionFunCore::Contracts::AuctionContext::Processor::UnpauseContract, type: :contract do
-  let(:auction) { Factory[:auction, :default_standard] }
+  let(:auction) { Factory[:auction, :default_scheduled_standard] }
 
   describe "#call" do
     subject(:contract) { described_class.new.call(attributes) }

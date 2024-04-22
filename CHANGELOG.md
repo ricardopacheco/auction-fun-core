@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [0.8.7] - 2024-04-23
+
+### Added
+
+- Removing default values from relations;
+- Rebuild factories to not contain default values;
+- Add automated tests for auction relations;
+
 ## [0.8.6] - 2024-04-23
 
 ### Added

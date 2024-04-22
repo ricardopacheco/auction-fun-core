@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe AuctionFunCore::Contracts::AuctionContext::PostAuction::WinnerContract, type: :contract do
-  let(:auction) { Factory[:auction, :default_standard, :with_winner] }
+  let(:auction) { Factory[:auction, :default_finished_standard, :with_winner] }
   let(:winner) { auction.winner }
 
   describe "#call" do
@@ -45,7 +45,7 @@ RSpec.describe AuctionFunCore::Contracts::AuctionContext::PostAuction::WinnerCon
     context "when the informed winner is different from the one set in the auction" do
       let(:real_winner) { Factory[:user] }
       let(:fake_winner) { Factory[:user] }
-      let(:auction) { Factory[:auction, :default_standard, winner_id: real_winner.id] }
+      let(:auction) { Factory[:auction, :default_scheduled_standard, winner_id: real_winner.id] }
       let(:attributes) do
         {
           auction_id: auction.id,

@@ -7,7 +7,7 @@ module AuctionFunCore
     class Staffs < ROM::Relation[:sql]
       use :pagination, per_page: 10
 
-      STAFF_KINDS = Types::Coercible::String.default("common").enum("root", "common")
+      STAFF_KINDS = Types::Coercible::String.enum("root", "common")
 
       schema(:staffs, infer: true) do
         attribute :id, Types::Integer

@@ -13,6 +13,7 @@ RSpec.describe AuctionFunCore::Repos::StaffContext::StaffRepository, type: :repo
         name: attributes.name,
         email: attributes.email,
         phone: attributes.phone,
+        kind: "common",
         password_digest: BCrypt::Password.create("password")
       )
     end

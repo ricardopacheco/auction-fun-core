@@ -21,6 +21,7 @@ module AuctionFunCore
         # @todo Add custom doc
         def call(attributes)
           values = yield validate_contract(attributes)
+          values = yield assign_default_values(values)
           values_with_encrypt_password = yield encrypt_password(values)
 
           staff_repository.transaction do |_t|
@@ -42,6 +43,15 @@ module AuctionFunCore
           return Failure(contract.errors.to_h) if contract.failure?
 
           Success(contract.to_h)
+        end
+
+        # By default, there can only be a single root staff. All other members have their type set to 'common'.
+        # @param attrs [Hash] user attributes
+        # @return [Dry::Monads::Result::Success]
+        def assign_default_values(attrs)
+          attrs[:kind] = "common"
+
+          Success(attrs)
         end
 
         # Transforms the password attribute, encrypting it to be saved in the database.

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe AuctionFunCore::Contracts::AuctionContext::Processor::StartContract, type: :contract do
-  let(:auction) { Factory[:auction, :default_standard] }
+  let(:auction) { Factory[:auction, :default_scheduled_standard] }
   let(:kinds) { described_class::AUCTION_KINDS.join(", ") }
 
   describe "#call" do
@@ -18,7 +18,7 @@ RSpec.describe AuctionFunCore::Contracts::AuctionContext::Processor::StartContra
     end
 
     it_behaves_like "validate_stopwatch_contract" do
-      let(:auction) { Factory[:auction, :default_penny] }
+      let(:auction) { Factory[:auction, :default_scheduled_penny] }
     end
 
     context "when auction_id is not founded on database" do
