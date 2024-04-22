@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "sidekiq"
+
 module AuctionFunCore
   module Workers
     # Abstract base class for background jobs.

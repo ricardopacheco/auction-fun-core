@@ -1,0 +1,13 @@
+pt-BR:
+  mail:
+    auction_context:
+      post_auction:
+        participant_mailer:
+          subject: "Sua participação no leilão %{title}"
+          body:
+            description: "Agradecemos por participar do leilão <b>%{title}</b>! Embora você não tenha sido o vencedor desta vez, gostaríamos de reconhecer o seu empenho e compartilhar algumas estatísticas do seu desempenho:"
+            stats:
+              auction_total_bids: "Total de lances do leilão: %{auction_total_bids}"
+              winner_bid: "Lance vencedor: %{winner_bid}"
+              auction_date: "Data do Leilão"
+            regards: "Esperamos que você tenha encontrado a experiência enriquecedora e convidamos você a participar de nossos futuros leilões. Acompanhe nosso site e redes sociais para ficar por dentro das próximas oportunidades."

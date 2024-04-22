@@ -11,7 +11,9 @@ module AuctionFunCore
         class StartOperation < AuctionFunCore::Operations::Base
           include Import["repos.auction_context.auction_repository"]
           include Import["contracts.auction_context.processor.start_contract"]
-          include Import["workers.operations.auction_context.processor.finish_operation_job"]
+          include Import["workers.operations.auction_context.processor.finish.closed_operation_job"]
+          include Import["workers.operations.auction_context.processor.finish.penny_operation_job"]
+          include Import["workers.operations.auction_context.processor.finish.standard_operation_job"]
 
           # @todo Add custom doc
           def self.call(attributes, &block)
@@ -28,10 +30,10 @@ module AuctionFunCore
           # @option opts [Integer] :stopwatch auction stopwatch
           # @return [ROM::Struct::Auction] auction object
           def call(attributes)
-            attrs = yield validate(attributes)
+            auction, attrs = yield validate_contract(attributes)
 
             auction_repository.transaction do |_t|
-              @auction, _ = auction_repository.update(attrs[:auction_id], update_params(attrs))
+              @auction, _ = auction_repository.update(auction.id, update_params(auction, attrs))
 
               yield publish_auction_start_event(@auction)
               yield scheduled_finished_auction(@auction)
@@ -46,36 +48,46 @@ module AuctionFunCore
           # of the informed attributes.
           # @param attributes [Hash] auction attributes
           # @return [Dry::Monads::Result::Success, Dry::Monads::Result::Failure]
-          def validate(attributes)
+          def validate_contract(attributes)
             contract = start_contract.call(attributes)
 
             return Failure(contract.errors.to_h) if contract.failure?
 
-            Success(contract.to_h)
+            Success([contract.context[:auction], contract.to_h])
           end
 
           # Updates the status of the auction and depending on the type of auction,
           # it already sets the final date.
           # @param attrs [Hash] auction attributes
           # @return [Hash]
-          def update_params(attrs)
-            return {status: "running"} unless attrs[:kind] == "penny"
+          def update_params(auction, attrs)
+            return {kind: auction.kind, status: "running"} unless attrs[:kind] == "penny"
 
-            {status: "running", finished_at: attrs[:stopwatch].seconds.from_now}
+            {kind: auction.kind, status: "running", finished_at: attrs[:stopwatch].seconds.from_now}
           end
 
           def publish_auction_start_event(auction)
             Success(Application[:event].publish("auctions.started", auction.to_h))
           end
 
+          # TODO: Added a small delay to perform operations (such as sending broadcasts and/or other operations).
           # Calls the background job class that will schedule the finish of the auction.
-          # Added a small delay to perform operations (such as sending broadcasts and/or other operations).
+          # In the case of the penny auction, the end of the auction occurs after the first timer resets.
           # @param auction [ROM::Struct::Auction]
           # @return [String] sidekiq jid
           def scheduled_finished_auction(auction)
-            return Success() if auction.kind == "penny"
+            perform_at = auction.finished_at
 
-            Success(finish_operation_job.class.perform_at(auction.finished_at, auction.id))
+            case auction.kind
+            in "penny"
+              perform_at = auction.started_at + auction.stopwatch.seconds
+
+              Success(penny_operation_job.class.perform_at(perform_at, auction.id))
+            in "standard"
+              Success(standard_operation_job.class.perform_at(perform_at, auction.id))
+            in "closed"
+              Success(closed_operation_job.class.perform_at(perform_at, auction.id))
+            end
           end
         end
       end

@@ -80,18 +80,15 @@ RSpec.describe AuctionFunCore::Operations::AuctionContext::CreateOperation, type
           .to receive(:perform_at)
       end
 
-      it "expect return success" do
-        expect(operation).to be_success
-        expect(operation.failure).to be_nil
-      end
-
-      it "expect create auction on database with correct status and dispatch event and processes" do
+      it "expect return success creating auction on database with correct status and dispatch event and processes" do
         expect { operation }.to change(auction_repository, :count).from(0).to(1)
 
+        expect(operation).to be_success
         expect(operation.success.status).to eq("scheduled")
         expect(AuctionFunCore::Application[:event]).to have_received(:publish).once
         expect(AuctionFunCore::Workers::Operations::AuctionContext::Processor::StartOperationJob)
-          .to have_received(:perform_at).once
+          .to have_received(:perform_at)
+          .once
       end
     end
   end

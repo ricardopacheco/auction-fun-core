@@ -5,6 +5,7 @@ ROM::SQL.migration do
     create_table(:auctions) do
       primary_key :id
       foreign_key :staff_id, :staffs, null: false
+      foreign_key :winner_id, :users
       column :title, String, null: false
       column :description, :text
       column :kind, :auction_kinds, null: false

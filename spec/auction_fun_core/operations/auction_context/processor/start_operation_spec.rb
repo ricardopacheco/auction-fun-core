@@ -76,30 +76,41 @@ RSpec.describe AuctionFunCore::Operations::AuctionContext::Processor::StartOpera
         }
       end
 
-      it "expect update status auction record on database" do
-        expect { operation }.to change { auction_repository.by_id(auction.id).status }.from("scheduled").to("running")
-      end
-
-      it "expect create a new job to finish the auction" do
-        allow(AuctionFunCore::Workers::Operations::AuctionContext::Processor::FinishOperationJob).to receive(:perform_at)
-
-        operation
-
-        expect(AuctionFunCore::Workers::Operations::AuctionContext::Processor::FinishOperationJob)
-          .to have_received(:perform_at)
-          .with(auction.finished_at, auction.id)
-          .once
-      end
-
-      it "expect publish the auction start event" do
+      it "expect update status auction record on database and publish the auction start event" do
         allow(AuctionFunCore::Application[:event]).to receive(:publish)
 
-        operation
+        expect { operation }.to change { auction_repository.by_id(auction.id).status }.from("scheduled").to("running")
 
         expect(AuctionFunCore::Application[:event]).to have_received(:publish).once
       end
 
-      context "when auction kind is penny" do
+      context "when auction kind is equal to 'standard'" do
+        it "expect create a new job to finish the standard auction" do
+          allow(AuctionFunCore::Workers::Operations::AuctionContext::Processor::Finish::StandardOperationJob).to receive(:perform_at)
+
+          operation
+
+          expect(AuctionFunCore::Workers::Operations::AuctionContext::Processor::Finish::StandardOperationJob)
+            .to have_received(:perform_at)
+            .once
+        end
+      end
+
+      context "when auction kind is equal to 'closed'" do
+        let(:auction) { Factory[:auction, :default_closed, started_at: Time.current] }
+
+        it "expect create a new job to finish the closed auction" do
+          allow(AuctionFunCore::Workers::Operations::AuctionContext::Processor::Finish::ClosedOperationJob).to receive(:perform_at)
+
+          operation
+
+          expect(AuctionFunCore::Workers::Operations::AuctionContext::Processor::Finish::ClosedOperationJob)
+            .to have_received(:perform_at)
+            .once
+        end
+      end
+
+      context "when auction kind is equal to 'penny'" do
         let(:stopwatch) { 45 }
         let(:old_finished_at) { auction.finished_at.strftime("%Y-%m-%d %H:%M:%S") }
         let(:new_finished_at) { stopwatch.seconds.from_now.strftime("%Y-%m-%d %H:%M:%S") }
@@ -118,6 +129,16 @@ RSpec.describe AuctionFunCore::Operations::AuctionContext::Processor::StartOpera
             .to change { auction_repository.by_id(auction.id).finished_at.strftime("%Y-%m-%d %H:%M:%S") }
             .from(old_finished_at)
             .to(new_finished_at)
+        end
+
+        it "expect call the finish penny auction job" do
+          allow(AuctionFunCore::Workers::Operations::AuctionContext::Processor::Finish::PennyOperationJob)
+            .to receive(:perform_at)
+
+          operation
+
+          expect(AuctionFunCore::Workers::Operations::AuctionContext::Processor::Finish::PennyOperationJob)
+            .to have_received(:perform_at)
         end
       end
     end

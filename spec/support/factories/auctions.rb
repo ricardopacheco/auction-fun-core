@@ -12,6 +12,14 @@ Factory.define(:auction, struct_namespace: AuctionFunCore::Entities) do |f|
   f.trait :with_minimal_bid do |t|
   end
 
+  f.trait :with_winner do |t|
+    f.association(:winner)
+  end
+
+  f.trait :with_participants do |t|
+    f.association(:winner)
+  end
+
   f.trait :with_kind_standard do |t|
     t.kind { "standard" }
   end
@@ -101,6 +109,7 @@ Factory.define(:auction, struct_namespace: AuctionFunCore::Entities) do |f|
 
     t.stopwatch { AuctionFunCore::Business::Configuration::AUCTION_STOPWATCH_MIN_VALUE }
     t.started_at { 1.hour.from_now }
+    t.finished_at { 1.hour.from_now + AuctionFunCore::Business::Configuration::AUCTION_STOPWATCH_MIN_VALUE }
   end
 
   f.trait :default_running_penny do |t|

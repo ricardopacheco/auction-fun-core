@@ -14,6 +14,7 @@ module AuctionFunCore
       schema(:auctions, infer: true) do
         attribute :id, Types::Integer
         attribute :staff_id, Types::ForeignKey(:staffs)
+        attribute :winner_id, Types::ForeignKey(:users)
         attribute :title, Types::String
         attribute :description, Types::String
         attribute :kind, KINDS
@@ -32,6 +33,7 @@ module AuctionFunCore
 
         associations do
           belongs_to :staff, as: :staff, relation: :staffs
+          belongs_to :winner, as: :winner, relation: :users, foreign_key: :winner_id
           has_many :bids, as: :bids, relation: :bids
         end
       end
@@ -49,6 +51,152 @@ module AuctionFunCore
         raise "Invalid argument" unless auction_id.is_a?(Integer)
 
         read(auction_with_bid_info(auction_id, options))
+      end
+
+      # Retrieves the standard auction winner and other participating bidders for a specified auction.
+      #
+      # This method queries the database to fetch the winner based on the highest bid and collects an array
+      # of other participants who placed bids in the auction, all except for the winner. The method returns
+      # structured data that includes the auction ID, winner's ID, total number of bids,
+      # and a list of participant IDs.
+      #
+      # @return [Hash] a hash containing details about the auction, including winner and participants:
+      #   - :id [Integer] the ID of the auction
+      #   - :winner_id [Integer] the ID of the winning bidder
+      #   - :total_bids [Integer] the total number of bids placed in the auction
+      #   - :participants [Array<Integer>] an array of user IDs of the other participants, excluding the winner
+      def load_standard_auction_winners_and_participants(auction_id)
+        raise "Invalid argument" unless auction_id.is_a?(Integer)
+
+        read("SELECT a.id, a.kind, a.status, w.user_id AS winner_id, COALESCE(COUNT(b.id), 0) AS total_bids,
+          COALESCE(
+            ARRAY_REMOVE(ARRAY_AGG(DISTINCT b.user_id ORDER BY b.user_id), w.user_id), ARRAY[]::INT[]
+          ) AS participant_ids
+        FROM auctions a
+        LEFT JOIN bids b ON a.id = b.auction_id
+        LEFT JOIN (
+          SELECT auction_id, user_id, MAX(value_cents) AS value_cents
+          FROM bids
+          WHERE auction_id = #{auction_id}
+          GROUP BY auction_id, user_id
+          ORDER BY value_cents DESC
+          LIMIT 1
+        ) AS w ON a.id = w.auction_id
+        WHERE a.id = #{auction_id}
+        GROUP BY a.id, w.user_id")
+      end
+
+      # Retrieves the penny auction winner and other participating bidders for a specified auction.
+      #
+      # This method queries the database to fetch the winner based on the latest bid and collects an array
+      # of other participants who placed bids in the auction, all except for the winner. The method returns
+      # structured data that includes the auction ID, winner's ID, total number of bids,
+      # and a list of participant IDs.
+      #
+      # @return [Hash] a hash containing details about the auction, including winner and participants:
+      #   - :id [Integer] the ID of the auction
+      #   - :winner_id [Integer] the ID of the winning bidder
+      #   - :total_bids [Integer] the total number of bids placed in the auction
+      #   - :participants [Array<Integer>] an array of user IDs of the other participants, excluding the winner
+      def load_penny_auction_winners_and_participants(auction_id)
+        raise "Invalid argument" unless auction_id.is_a?(Integer)
+
+        read("SELECT a.id, a.kind, a.status, w.user_id AS winner_id, COALESCE(COUNT(b.id), 0) AS total_bids,
+          COALESCE(
+            ARRAY_REMOVE(ARRAY_AGG(DISTINCT b.user_id ORDER BY b.user_id), w.user_id), ARRAY[]::INT[]
+          ) AS participant_ids
+        FROM auctions a
+        LEFT JOIN bids b ON a.id = b.auction_id
+        LEFT JOIN (
+          SELECT auction_id, user_id
+          FROM bids
+          WHERE auction_id = #{auction_id}
+          ORDER BY bids.created_at DESC
+          LIMIT 1
+        ) AS w ON a.id = w.auction_id
+        WHERE a.id = #{auction_id}
+        GROUP BY a.id, w.user_id")
+      end
+
+      # Retrieves the closed auction winner and other participating bidders for a specified auction.
+      #
+      # This method queries the database to fetch the winner based on the highest bid and collects an array
+      # of other participants who placed bids in the auction, all except for the winner. The method returns
+      # structured data that includes the auction ID, winner's ID, total number of bids,
+      # and a list of participant IDs.
+      #
+      # @return [Hash] a hash containing details about the auction, including winner and participants:
+      #   - :id [Integer] the ID of the auction
+      #   - :winner_id [Integer] the ID of the winning bidder
+      #   - :total_bids [Integer] the total number of bids placed in the auction
+      #   - :participants [Array<Integer>] an array of user IDs of the other participants, excluding the winner
+      def load_closed_auction_winners_and_participants(auction_id)
+        raise "Invalid argument" unless auction_id.is_a?(Integer)
+
+        read("SELECT a.id, a.kind, a.status, w.user_id AS winner_id, COALESCE(COUNT(b.id), 0) AS total_bids,
+          COALESCE(
+            ARRAY_REMOVE(ARRAY_AGG(DISTINCT b.user_id ORDER BY b.user_id), w.user_id), ARRAY[]::INT[]
+          ) AS participant_ids
+        FROM auctions a
+        LEFT JOIN bids b ON a.id = b.auction_id
+        LEFT JOIN (
+          SELECT auction_id, user_id, MAX(value_cents) AS value_cents
+          FROM bids
+          WHERE auction_id = #{auction_id}
+          GROUP BY auction_id, user_id
+          ORDER BY value_cents DESC
+          LIMIT 1
+        ) AS w ON a.id = w.auction_id
+        WHERE a.id = #{auction_id}
+        GROUP BY a.id, w.user_id")
+      end
+
+      def load_winner_statistics(auction_id, winner_id)
+        raise "Invalid argument" unless auction_id.is_a?(Integer) || winner_id.is_a?(Integer)
+
+        read("SELECT a.id, COUNT(b.id) AS auction_total_bids, MAX(b.value_cents) AS winner_bid,
+          date(a.finished_at) as auction_date,
+          (SELECT COUNT(*) FROM bids b2
+            WHERE b2.auction_id = #{auction_id}
+            AND b2.user_id = #{winner_id}
+          ) AS winner_total_bids
+        FROM auctions a
+        LEFT JOIN bids b ON a.id = b.auction_id AND a.id = #{auction_id}
+        LEFT JOIN users u ON u.id = b.user_id AND u.id = #{winner_id}
+        LEFT JOIN (
+          SELECT auction_id, user_id, MAX(value_cents) AS value_cents
+          FROM bids
+          WHERE auction_id = #{auction_id}
+          GROUP BY auction_id, user_id
+          ORDER BY value_cents DESC
+          LIMIT 1
+        ) AS w ON a.id = w.auction_id
+        WHERE a.id = #{auction_id}
+        GROUP BY a.id")
+      end
+
+      def load_participant_statistics(auction_id, participant_id)
+        raise "Invalid argument" unless auction_id.is_a?(Integer) || participant_id.is_a?(Integer)
+
+        read("SELECT a.id, COUNT(b.id) AS auction_total_bids, MAX(b.value_cents) AS winner_bid,
+          date(a.finished_at) as auction_date,
+          (SELECT COUNT(*) FROM bids b2
+            WHERE b2.auction_id = #{auction_id}
+            AND b2.user_id = #{participant_id}
+          ) AS winner_total_bids
+        FROM auctions a
+        LEFT JOIN bids b ON a.id = b.auction_id AND a.id = #{auction_id}
+        LEFT JOIN users u ON u.id = b.user_id AND u.id = #{participant_id}
+        LEFT JOIN (
+          SELECT auction_id, user_id, MAX(value_cents) AS value_cents
+          FROM bids
+          WHERE auction_id = #{auction_id}
+          GROUP BY auction_id, user_id
+          ORDER BY value_cents DESC
+          LIMIT 1
+        ) AS w ON a.id = w.auction_id
+        WHERE a.id = #{auction_id}
+        GROUP BY a.id")
       end
 
       private

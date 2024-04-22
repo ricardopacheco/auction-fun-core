@@ -1,0 +1,13 @@
+pt-BR:
+  mail:
+    auction_context:
+      post_auction:
+        winner_mailer:
+          subject: "Parabéns! Você é o vencedor do leilão %{title}!"
+          body:
+            description: "Estamos muito felizes em informar que você foi o vencedor do leilão <b>%{title}</b>! Seu lance foi o maior, e agora você é o novo proprietário do item. Abaixo estão algumas informações e estatísticas sobre o leilão:"
+            item:
+              title: "Item Arrematado: <b>%{title}</b>"
+              winner_bid: "Seu Lance Vencedor: %{winner_bid}"
+              auction_total_bids: "Número Total de Lances: %{auction_total_bids}"
+              auction_date: "Data do Leilão"

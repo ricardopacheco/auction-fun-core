@@ -1,0 +1,13 @@
+en-US:
+  mail:
+    auction_context:
+      post_auction:
+        winner_mailer:
+          subject: "Congratulations! You are the winner of the auction %{title}!"
+          body:
+            description: "We are very happy to inform you that you were the winner of our auction <b>%{title}</b>! Your bid was the highest, and you are now the new owner of item. Below is some information and statistics about the auction:"
+            item:
+              title: "Auctioned item: <b>%{title}</b>"
+              winner_bid: "Your Winning Bid: %{winner_bid}"
+              auction_total_bids: "Total Number of Bids: %{auction_total_bids}"
+              auction_date: "Auction Date"

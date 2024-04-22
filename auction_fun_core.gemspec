@@ -49,6 +49,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rom", "5.3.0"
   spec.add_dependency "rom-sql", "3.6.2"
   spec.add_dependency "sidekiq", "7.2.2"
+  spec.add_dependency "sidekiq-unique-jobs", "8.0.10"
   spec.add_dependency "yard", "0.9.36"
   spec.add_dependency "zeitwerk", "2.6.13"
 

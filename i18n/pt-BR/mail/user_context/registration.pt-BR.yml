@@ -1,9 +1,5 @@
 pt-BR:
   mail:
-    general:
-      hello: "Olá %{name}"
-      app_name: "AuctionFun"
-      team: "Time AuctionFun"
     user_context:
       registration:
         subject: "Bem vindo a AuctionFun"
