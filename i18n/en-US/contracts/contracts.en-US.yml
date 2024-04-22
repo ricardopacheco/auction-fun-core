@@ -70,3 +70,12 @@ en-US:
         auction_context:
           create:
             finished_at: "must be after started time"
+          post_auction:
+            participant:
+              none: "there was no participation from this user in the auction reported"
+            winner:
+              wrong: "was not the winner of this auction"
+          processor:
+            finish:
+              invalid_kind: "auction with invalid type"
+              invalid_status: "auction with invalid status"

@@ -70,3 +70,12 @@ pt-BR:
         auction_context:
           create:
             finished_at: "deve ser depois da hora de início"
+          post_auction:
+            participant:
+              none: "não houve nenhuma participação deste usuário no leilão informado"
+            winner:
+              wrong: "não foi o vencedor deste leilão"
+          processor:
+            finish:
+              invalid_kind: "leilão com tipo inválido"
+              invalid_status: "leilão com status inválido"

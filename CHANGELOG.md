@@ -1,5 +1,22 @@
 ## [Unreleased]
 
+## [0.8.6] - 2024-04-23
+
+### Added
+
+- Auction finalization configured for each type of auction;
+- Add operations for winner and participant of an auction;
+- Configure background job to work with unique jobs;
+- Add 'sidekiq-unique-jobs' to be responsible for finishing penny auctions;
+
+### Changed:
+
+- General improvements on seed data;
+
+### Fixed:
+
+- NameError: uninitialized constant AuctionFunCore::Workers::ApplicationJob::Sidekiq (NameError)
+
 ## [0.8.5] - 2024-04-03
 
 ### Added

@@ -1,0 +1,13 @@
+en-US:
+  mail:
+    auction_context:
+      post_auction:
+        participant_mailer:
+          subject: "Thank you for participating in the auction %{title}"
+          body:
+            description: "Thank you for participating in the auction <b>%{title}</b>! Although you weren't the winner this time, we would like to recognize your efforts and share some statistics on your performance:"
+            stats:
+              auction_total_bids: "Total auction bids: %{auction_total_bids}"
+              winner_bid: "Winner bid: %{winner_bid}"
+              auction_date: "Auction Date"
+            regards: "We hope you found the experience enriching and invite you to participate in our future auctions. Follow our website and social media to stay up to date with upcoming opportunities."

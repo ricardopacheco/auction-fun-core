@@ -3,6 +3,7 @@
 require "spec_helper"
 
 RSpec.describe AuctionFunCore::Operations::BidContext::CreateBidPennyOperation, type: :operation do
+  let(:auction_repository) { AuctionFunCore::Repos::AuctionContext::AuctionRepository.new }
   let(:bid_repository) { AuctionFunCore::Repos::BidContext::BidRepository.new }
 
   describe ".call(attributes, &block)" do
@@ -81,12 +82,51 @@ RSpec.describe AuctionFunCore::Operations::BidContext::CreateBidPennyOperation, 
         expect(operation.failure).to be_blank
       end
 
-      it "expect persist new bid on database and dispatch event" do
+      it "expect persist new bid on database" do
+        expect { operation }.to change(bid_repository, :count).from(0).to(1)
+      end
+
+      it "expect dispatch event" do
         allow(AuctionFunCore::Application[:event]).to receive(:publish)
 
-        expect { operation }.to change(bid_repository, :count).from(0).to(1)
+        operation
 
         expect(AuctionFunCore::Application[:event]).to have_received(:publish).once
+      end
+
+      context "when an auction has not started" do
+        it "expects not to update the auction's 'finished_at' field" do
+          expect { operation }.not_to change { auction_repository.by_id(auction.id).finished_at }
+        end
+
+        it "expect not reschedule the end of the auction" do
+          allow(AuctionFunCore::Workers::Operations::AuctionContext::Processor::Finish::PennyOperationJob)
+            .to receive(:perform_at).with(Time, auction.id)
+
+          operation
+
+          expect(AuctionFunCore::Workers::Operations::AuctionContext::Processor::Finish::PennyOperationJob)
+            .not_to have_received(:perform_at).with(Time, auction.id)
+        end
+      end
+
+      context "when an auction was started" do
+        let(:auction) { Factory[:auction, :default_running_penny] }
+        let(:user) { Factory[:user, :with_balance] }
+
+        it "expects to update the auction's 'finished_at' field and reschedule the end of the auction" do
+          expect { operation }.to change { auction_repository.by_id(auction.id).finished_at }
+        end
+
+        it "expect reschedule the end of the auction" do
+          allow(AuctionFunCore::Workers::Operations::AuctionContext::Processor::Finish::PennyOperationJob)
+            .to receive(:perform_at).with(Time, auction.id)
+
+          operation
+
+          expect(AuctionFunCore::Workers::Operations::AuctionContext::Processor::Finish::PennyOperationJob)
+            .to have_received(:perform_at).with(Time, auction.id).once
+        end
       end
     end
   end
