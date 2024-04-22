@@ -152,7 +152,7 @@ RSpec.describe AuctionFunCore::Contracts::AuctionContext::CreateContract, type: 
     end
 
     it_behaves_like "validate_stopwatch_contract" do
-      let(:auction) { Factory.structs[:auction, kind: :penny, initial_bid_cents: 1000] }
+      let(:auction) { Factory.structs[:auction, :with_kind_penny, :with_status_scheduled, initial_bid_cents: 1000] }
     end
   end
 end

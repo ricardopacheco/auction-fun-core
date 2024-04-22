@@ -64,7 +64,7 @@ RSpec.describe AuctionFunCore::Contracts::BidContext::CreateBidStandardContract,
       end
 
       context 'when auction kind is different of "standard"' do
-        let(:auction) { Factory[:auction, :default_penny] }
+        let(:auction) { Factory[:auction, :default_scheduled_penny] }
         let(:attributes) { {auction_id: auction.id} }
 
         it "expect failure with error messages" do

@@ -12,7 +12,7 @@ RSpec.describe AuctionFunCore::Operations::AuctionContext::CreateOperation, type
       context "when operation happens with success" do
         let(:staff) { Factory[:staff] }
         let(:attributes) do
-          Factory.structs[:auction, :default_standard, staff: staff]
+          Factory.structs[:auction, :default_scheduled_standard, staff: staff]
             .to_h.except(:id, :created_at, :updated_at, :staff)
         end
 
@@ -70,7 +70,7 @@ RSpec.describe AuctionFunCore::Operations::AuctionContext::CreateOperation, type
     context "when contract are valid" do
       let(:staff) { Factory[:staff] }
       let(:attributes) do
-        Factory.structs[:auction, :default_standard, staff: staff]
+        Factory.structs[:auction, :default_scheduled_standard, staff: staff]
           .to_h.except(:id, :created_at, :updated_at, :staff)
       end
 

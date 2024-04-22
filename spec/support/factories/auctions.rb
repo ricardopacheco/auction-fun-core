@@ -65,8 +65,9 @@ Factory.define(:auction, struct_namespace: AuctionFunCore::Entities) do |f|
     t.finished_at { 2.days.from_now }
   end
 
-  f.trait :default_standard do |t|
+  f.trait :default_scheduled_standard do |t|
     t.kind { "standard" }
+    t.status { "scheduled" }
 
     t.started_at { 1.hour.from_now }
     t.finished_at { 1.week.from_now }
@@ -104,8 +105,9 @@ Factory.define(:auction, struct_namespace: AuctionFunCore::Entities) do |f|
     t.minimal_bid_cents { 100 }
   end
 
-  f.trait :default_penny do |t|
+  f.trait :default_scheduled_penny do |t|
     t.kind { "penny" }
+    t.status { "scheduled" }
 
     t.stopwatch { AuctionFunCore::Business::Configuration::AUCTION_STOPWATCH_MIN_VALUE }
     t.started_at { 1.hour.from_now }
@@ -121,8 +123,9 @@ Factory.define(:auction, struct_namespace: AuctionFunCore::Entities) do |f|
     t.initial_bid_cents { 100 }
   end
 
-  f.trait :default_closed do |t|
+  f.trait :default_scheduled_closed do |t|
     t.kind { "closed" }
+    t.status { "scheduled" }
 
     t.initial_bid_cents { 100 }
     t.started_at { 1.hour.from_now }

@@ -4,7 +4,7 @@ require "spec_helper"
 
 RSpec.describe AuctionFunCore::Operations::AuctionContext::Processor::StartOperation, type: :operation do
   let(:auction_repository) { AuctionFunCore::Repos::AuctionContext::AuctionRepository.new }
-  let(:auction) { Factory[:auction, :default_standard, started_at: Time.current] }
+  let(:auction) { Factory[:auction, :default_scheduled_standard, started_at: Time.current] }
   let(:auction_id) { auction.id }
   let(:kind) { auction.kind }
   let(:stopwatch) { 0 }
@@ -97,7 +97,7 @@ RSpec.describe AuctionFunCore::Operations::AuctionContext::Processor::StartOpera
       end
 
       context "when auction kind is equal to 'closed'" do
-        let(:auction) { Factory[:auction, :default_closed, started_at: Time.current] }
+        let(:auction) { Factory[:auction, :default_scheduled_closed, started_at: Time.current] }
 
         it "expect create a new job to finish the closed auction" do
           allow(AuctionFunCore::Workers::Operations::AuctionContext::Processor::Finish::ClosedOperationJob).to receive(:perform_at)

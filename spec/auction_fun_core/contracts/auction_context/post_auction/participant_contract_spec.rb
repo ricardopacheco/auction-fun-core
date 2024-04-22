@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe AuctionFunCore::Contracts::AuctionContext::PostAuction::ParticipantContract, type: :contract do
-  let(:auction) { Factory[:auction, :default_standard, :with_winner] }
+  let(:auction) { Factory[:auction, :default_finished_standard, :with_winner] }
   let(:participant) { Factory[:user] }
 
   describe "#call" do
@@ -64,7 +64,7 @@ RSpec.describe AuctionFunCore::Contracts::AuctionContext::PostAuction::Participa
       end
 
       before do
-        Factory[:bid, auction_id: auction.id, user_id: participant.id, value_cents: auction.minimal_bid_cents]
+        Factory[:bid, auction: auction, user_id: participant.id, value_cents: auction.minimal_bid_cents]
       end
 
       it "expect return sucess" do

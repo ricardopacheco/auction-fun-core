@@ -6,7 +6,7 @@ RSpec.describe AuctionFunCore::Repos::BidContext::BidRepository, type: :repo do
   subject(:repo) { described_class.new }
 
   describe "#create" do
-    let(:auction) { Factory[:auction, :default_standard] }
+    let(:auction) { Factory[:auction, :default_scheduled_standard] }
     let(:user) { Factory[:user] }
 
     let(:bid) do

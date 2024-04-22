@@ -4,7 +4,7 @@ require "spec_helper"
 
 RSpec.describe AuctionFunCore::Workers::Operations::AuctionContext::PostAuction::WinnerOperationJob, type: :worker do
   let(:auction_repository) { AuctionFunCore::Repos::AuctionContext::AuctionRepository.new }
-  let(:auction) { Factory[:auction, :default_standard, :with_winner] }
+  let(:auction) { Factory[:auction, :default_finished_standard, :with_winner] }
 
   describe "#perform" do
     subject(:worker) { described_class.new }

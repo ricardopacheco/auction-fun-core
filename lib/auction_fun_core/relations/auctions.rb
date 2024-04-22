@@ -7,9 +7,8 @@ module AuctionFunCore
     class Auctions < ROM::Relation[:sql]
       use :pagination, per_page: 10
 
-      KINDS = Types::Coercible::String.default("standard").enum("standard", "penny", "closed")
-      STATUSES = Types::Coercible::String.default("scheduled")
-        .enum("scheduled", "running", "paused", "canceled", "finished")
+      KINDS = Types::Coercible::String.enum("standard", "penny", "closed")
+      STATUSES = Types::Coercible::String.enum("scheduled", "running", "paused", "canceled", "finished")
 
       schema(:auctions, infer: true) do
         attribute :id, Types::Integer
