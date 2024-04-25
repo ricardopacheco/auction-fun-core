@@ -90,6 +90,37 @@ RSpec.describe AuctionFunCore::Operations::AuctionContext::CreateOperation, type
           .to have_received(:perform_at)
           .once
       end
+
+      context "when the start of the auction is more than 1h from the current time" do
+        before do
+          attributes[:started_at] = 2.hours.from_now
+          allow(AuctionFunCore::Workers::Operations::AuctionContext::PreAuction::AuctionStartReminderOperationJob)
+            .to receive(:perform_at)
+        end
+
+        it "expect schedule reminder notification" do
+          operation
+
+          expect(AuctionFunCore::Workers::Operations::AuctionContext::PreAuction::AuctionStartReminderOperationJob)
+            .to have_received(:perform_at)
+            .once
+        end
+      end
+
+      context "When the start of the auction is less than 1h from the current time" do
+        before do
+          attributes[:started_at] = 30.minutes.from_now
+          allow(AuctionFunCore::Workers::Operations::AuctionContext::PreAuction::AuctionStartReminderOperationJob)
+            .to receive(:perform_at)
+        end
+
+        it "expect not schedule reminder notification" do
+          operation
+
+          expect(AuctionFunCore::Workers::Operations::AuctionContext::PreAuction::AuctionStartReminderOperationJob)
+            .not_to have_received(:perform_at)
+        end
+      end
     end
   end
 end

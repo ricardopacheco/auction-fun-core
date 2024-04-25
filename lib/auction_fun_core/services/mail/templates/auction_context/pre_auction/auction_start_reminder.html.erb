@@ -65,7 +65,7 @@
                             <tr>
                               <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                 <div style="font-family:Helvetica, Arial, sans-serif;font-size:18px;font-weight:400;line-height:24px;text-align:left;color:#434245;">
-                                  <%= raw I18n.t("mail.auction_context.post_auction.participant_mailer.body.description", title: @auction.title) %>
+                                  <%= raw I18n.t("mail.auction_context.pre_auction.auction_start_reminder_mailer.body.description") %>
                                 </div>
                               </td>
                             </tr>
@@ -73,10 +73,29 @@
                               <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                 <div style="font-family:Helvetica, Arial, sans-serif;font-size:18px;font-weight:400;line-height:24px;text-align:left;color:#434245;">
                                   <ul>
-                                    <li><%= I18n.t("mail.auction_context.post_auction.participant_mailer.body.stats.auction_total_bids", auction_total_bids: @statistics.auction_total_bids) %></li>
-                                    <li><%= I18n.t("mail.auction_context.post_auction.participant_mailer.body.stats.winner_bid", winner_bid: @statistics.winner_bid) %></li>
-                                    <li><%= I18n.t("mail.auction_context.post_auction.participant_mailer.body.stats.auction_date") %>: <%= I18n.l(@statistics.auction_date, format: :default) %></li>
+                                    <li><%= I18n.t("mail.auction_context.pre_auction.auction_start_reminder_mailer.body.auction_date") %>: <%= I18n.l(@auction.started_at, format: :long) %></li>
                                   </ul>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td align="center" vertical-align="middle" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
+                                    <tbody>
+                                      <tr>
+                                        <td align="center" bgcolor="#2e58ff" role="presentation" style="border:none;border-radius:3px;cursor:auto;mso-padding-alt:10px 25px;background:#2e58ff;" valign="middle">
+                                          <a href="#" style="display: inline-block; background: #2e58ff; color: white; font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 13px; font-weight: normal; line-height: 30px; margin: 0; text-decoration: none; text-transform: none; padding: 10px
+25px; mso-padding-alt: 0px; border-radius: 3px;" target="_blank"> <%= I18n.t("mail.auction_context.pre_auction.auction_start_reminder_mailer.body.link_to_auction") %> </a>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                                  <div style="font-family:Roboto, Helvetica, Arial, sans-serif;font-size:14px;font-weight:400;line-height:20px;text-align:left;color:#ffffff;">
+                                    <p style="margin-bottom: 0;"><%= I18n.t("mail.auction_context.pre_auction.auction_start_reminder_mailer.body.thanks") %></p>
+                                  </div>
                                 </td>
                               </tr>
                               <tr>

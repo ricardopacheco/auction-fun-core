@@ -36,4 +36,40 @@ RSpec.describe AuctionFunCore::Entities::Auction, type: :entity do
       end
     end
   end
+
+  describe "#started?" do
+    context "when an auction has not started" do
+      subject(:auction) { Factory.structs[:auction, :default_scheduled_standard, started_at: 3.hours.from_now] }
+
+      it "expect return false" do
+        expect(auction.started?).to be_falsey
+      end
+    end
+
+    context "when an auction was started" do
+      subject(:auction) { Factory.structs[:auction, :default_running_standard, started_at: 1.minute.ago] }
+
+      it "expect return true" do
+        expect(auction.started?).to be_truthy
+      end
+    end
+  end
+
+  describe "#not_started?" do
+    context "when an auction was started" do
+      subject(:auction) { Factory.structs[:auction, :default_running_standard, started_at: 1.minute.ago] }
+
+      it "expect return false" do
+        expect(auction.not_started?).to be_falsey
+      end
+    end
+
+    context "when an auction has not started" do
+      subject(:auction) { Factory.structs[:auction, :default_scheduled_standard, started_at: 3.hours.from_now] }
+
+      it "expect return true" do
+        expect(auction.not_started?).to be_truthy
+      end
+    end
+  end
 end

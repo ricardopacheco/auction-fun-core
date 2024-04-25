@@ -1,0 +1,11 @@
+pt-BR:
+  mail:
+    auction_context:
+      pre_auction:
+        auction_start_reminder_mailer:
+          subject: "O leilão %{title} começará em breve!"
+          body:
+            description: "Estamos entusiasmados em informar que o leilão em que você está participando começará em breve!"
+            auction_date: "Hora de Início"
+            link_to_auction: "Clique no link abaixo para ver os detalhes do leilão"
+            thanks: "Agradecemos pela sua participação e desejamos boa sorte!"

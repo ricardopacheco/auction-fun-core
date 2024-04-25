@@ -1,0 +1,11 @@
+pt-BR:
+  mail:
+    auction_context:
+      pre_auction:
+        auction_start_reminder_mailer:
+          subject: "The %{title} auction will start soon!"
+          body:
+            description: "We are excited to inform you that the auction you are participating in will begin soon!"
+            auction_date: "Start Time"
+            link_to_auction: "Click the link below to view auction details"
+            thanks: "Thank you for your participation and we wish you good luck!"

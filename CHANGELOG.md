@@ -1,5 +1,16 @@
 ## [Unreleased]
 
+## [0.8.8] - 2024-04-25
+
+### Added
+
+- Auction start reminder sent to participants;
+- I18n time format;
+
+### Fixed:
+
+- I18n messages for winner and auction participant emails;
+
 ## [0.8.7] - 2024-04-23
 
 ### Added

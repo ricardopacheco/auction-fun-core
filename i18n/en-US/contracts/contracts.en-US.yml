@@ -70,6 +70,9 @@ en-US:
         auction_context:
           create:
             finished_at: "must be after started time"
+          pre_auction:
+            auction_start_reminder:
+              auction_already_started: "auction already started"
           post_auction:
             participant:
               none: "there was no participation from this user in the auction reported"
