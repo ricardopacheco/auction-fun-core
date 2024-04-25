@@ -52,6 +52,13 @@ pt-BR:
       - :day
       - :month
       - :year
+  time:
+    am: am
+    formats:
+      default: "%a, %d de %B de %Y, %H:%M:%S %z"
+      long: "%d de %B de %Y, %H:%M"
+      short: "%d de %B, %H:%M"
+    pm: pm
   application:
     general:
       hello: "Olá %{name}"

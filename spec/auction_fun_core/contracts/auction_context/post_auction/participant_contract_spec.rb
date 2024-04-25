@@ -67,7 +67,7 @@ RSpec.describe AuctionFunCore::Contracts::AuctionContext::PostAuction::Participa
         Factory[:bid, auction: auction, user_id: participant.id, value_cents: auction.minimal_bid_cents]
       end
 
-      it "expect return sucess" do
+      it "expect return success" do
         expect(contract).to be_success
         expect(contract.context[:auction]).to be_a(AuctionFunCore::Entities::Auction)
         expect(contract.context[:participant]).to be_a(AuctionFunCore::Entities::User)

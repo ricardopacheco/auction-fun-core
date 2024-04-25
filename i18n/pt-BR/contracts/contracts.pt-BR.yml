@@ -70,6 +70,9 @@ pt-BR:
         auction_context:
           create:
             finished_at: "deve ser depois da hora de início"
+          pre_auction:
+            auction_start_reminder:
+              auction_already_started: "leilão já foi iniciado"
           post_auction:
             participant:
               none: "não houve nenhuma participação deste usuário no leilão informado"
