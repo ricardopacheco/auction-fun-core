@@ -3,12 +3,27 @@
 module AuctionFunCore
   module Contracts
     module StaffContext
-      # Contract class to authenticate staff.
+      # This class is designed to authenticate staff members.
+      # It validates the login and password, checking their format and verifying them against the database records.
+      #
+      # @example Authenticating a staff member
+      #   contract = AuctionFunCore::Contracts::StaffContext::AuthenticationContract.new
+      #   attributes = { login: 'staff@example.com', password: 'securePassword123' }
+      #   result = contract.call(attributes)
+      #   if result.success?
+      #     puts "Authentication successful."
+      #   else
+      #     puts "Authentication failed: #{result.errors.to_h}"
+      #   end
+      #
       class AuthenticationContract < ApplicationContract
+        # Scope for internationalization (i18n) entries specific to errors in this contract.
         I18N_SCOPE = "contracts.errors.custom.default"
 
+        # Repositories initialized to retrieve data for validation.
         option :staff_repository, default: proc { Repos::StaffContext::StaffRepository.new }
 
+        # Parameters specifying the required input types and fields.
         params do
           required(:login)
           required(:password)
@@ -18,12 +33,11 @@ module AuctionFunCore
           end
         end
 
+        # Additional rules for validating the format of login and password.
         rule(:login).validate(:login_format)
         rule(:password).validate(:password_format)
 
-        # Validation for login.
-        # Searches for the staff in the database from the login, and, if found,
-        # compares the entered password.
+        # Validates the presence of the staff member in the database and checks if the password matches.
         rule do |context:|
           next if (rule_error?(:login) || schema_error?(:login)) || (rule_error?(:password) || schema_error?(:password))
 

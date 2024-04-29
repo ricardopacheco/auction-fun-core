@@ -6,12 +6,15 @@ module AuctionFunCore
       module Mail
         module UserContext
           ##
-          # Background job class responsible for adding emails to the queue.
-          #
+          # Background job class responsible for queuing registration emails.
           class RegistrationMailerJob < AuctionFunCore::Workers::ApplicationJob
             include Import["repos.user_context.user_repository"]
 
-            # @param user_id [Integer] user ID
+            # Initializes a new RegistrationMailerJob instance.
+            #
+            # @param user_id [Integer] The ID of the user.
+            # @param retry_count [Integer] The current retry count for the job.
+            # @return [void]
             def perform(user_id, retry_count = 0)
               user = user_repository.by_id!(user_id)
 
@@ -26,9 +29,8 @@ module AuctionFunCore
 
             private
 
-            # Since the shipping code structure does not follow project conventions,
-            # making the default injection dependency would be more complicated.
-            # Therefore, here I directly explain the class to be called.
+            # Directly specifies the class to be called due to non-standard dependency injection.
+            # @return [Class] The registration mailer class.
             def registration_mailer
               AuctionFunCore::Services::Mail::UserContext::RegistrationMailer
             end

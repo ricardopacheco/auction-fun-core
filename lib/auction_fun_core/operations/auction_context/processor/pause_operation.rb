@@ -12,7 +12,21 @@ module AuctionFunCore
           include Import["repos.auction_context.auction_repository"]
           include Import["contracts.auction_context.processor.pause_contract"]
 
-          # @todo Add custom doc
+          ##
+          # Executes the pause operation with the provided attributes.
+          #
+          # @param attributes [Hash] The attributes for the pause operation.
+          # @option attributes auction_id [Integer] The ID of the auction.
+          # @yield [Dry::Matcher::Evaluator] The block to handle the result of the operation.
+          # @return [Dry::Matcher::Evaluator] The result of the operation.
+          #
+          # @example
+          #   attributes = { auction_id: 123 }
+          #
+          #   AuctionFunCore::Operations::AuctionContext::Processor::PauseOperation.call(attributes) do |result|
+          #     result.success { |auction| puts "Paused auction sucessfully! #{auction.to_h}" }
+          #     result.failure { |failure| puts "Failed to pause auction: #{failure.errors.to_h}"}
+          #   end
           def self.call(attributes, &block)
             operation = new.call(attributes)
 
@@ -21,6 +35,27 @@ module AuctionFunCore
             Dry::Matcher::ResultMatcher.call(operation, &block)
           end
 
+          ##
+          # Performing an auction pause
+          #
+          # @param attributes [Hash] The attributes for the pause operation.
+          # @option attributes auction_id [Integer] The ID of the auction.
+          # @return [Dry::Monads::Result::Success, Dry::Monads::Result::Failure] The result of the operation.
+          #
+          # @example
+          #   attributes = { auction_id: 123 }
+          #
+          #   operation = AuctionFunCore::Operations::AuctionContext::Processor::PauseOperation.call(attributes)
+          #
+          #   if operation.success?
+          #     auction = operation.success
+          #     puts "Paused auction sucessfully! #{auction.to_h}"
+          #   end
+          #
+          #   if operation.failure?
+          #     failure = operation.failure
+          #     puts "Failed to pause auction: #{failure.errors.to_h}"
+          #   end
           def call(attributes)
             attrs = yield validate(attributes)
 

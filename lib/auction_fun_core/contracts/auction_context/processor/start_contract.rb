@@ -5,28 +5,40 @@ module AuctionFunCore
     module AuctionContext
       module Processor
         ##
-        # Contract class for start auctions.
+        # This class is designed to validate the initiation of auctions. It ensures
+        # the auction exists and is of a valid kind, and also manages specific rules for auctions
+        # that require a stopwatch, such as penny auctions.
+        #
+        # @example Starting an auction
+        #   contract = AuctionFunCore::Contracts::AuctionContext::Processor::StartContract.new
+        #   attributes = { auction_id: 123, kind: "penny", stopwatch: 30 }
+        #   result = contract.call(attributes)
+        #   if result.success?
+        #     puts "Auction started successfully."
+        #   else
+        #     puts "Failed to start auction: #{result.errors.to_h}"
+        #   end
         #
         class StartContract < Contracts::ApplicationContract
           include AuctionFunCore::Business::Configuration
 
+          # Repository initialized to retrieve auction data for validation.
           option :auction_repo, default: proc { Repos::AuctionContext::AuctionRepository.new }
 
+          # Parameters specifying the required input types and fields.
           params do
             required(:auction_id).filled(:integer)
             required(:kind).value(included_in?: AUCTION_KINDS)
             optional(:stopwatch).filled(:integer)
           end
 
-          # Validation for auction.
-          # Validates if the auction exists in the database.
+          # Validates the existence of the auction.
           rule(:auction_id) do |context:|
             context[:auction] ||= auction_repo.by_id(value)
             key.failure(I18n.t("contracts.errors.custom.not_found")) unless context[:auction]
           end
 
-          # Validation for stopwatch.
-          #
+          # Validates the requirements for the stopwatch in penny auctions.
           rule(:stopwatch) do
             # Must be filled if auction kind is type penny.
             key.failure(I18n.t("contracts.errors.filled?")) if !key? && values[:kind] == "penny"

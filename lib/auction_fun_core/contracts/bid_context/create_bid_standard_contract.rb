@@ -3,12 +3,25 @@
 module AuctionFunCore
   module Contracts
     module BidContext
-      # Contract class to create new bids.
+      # This class validates the creation of new bids for standard-type auctions.
+      # It ensures the bid is placed by a valid user on a valid auction that is open for bids,
+      # and that the bid value meets or exceeds the minimum bid required by the auction.
+      #
+      # @example Creating a bid for a standard auction
+      #   contract = AuctionFunCore::Contracts::BidContext::CreateBidStandardContract.new
+      #   attributes = { auction_id: 1, user_id: 2, value_cents: 5000 }
+      #   result = contract.call(attributes)
+      #   if result.success?
+      #     puts "Bid created successfully."
+      #   else
+      #     puts "Failed to create bid: #{result.errors.to_h}"
+      #   end
       class CreateBidStandardContract < Contracts::ApplicationContract
+        # Repositories initialized to retrieve data for validation.
         option :user_repo, default: proc { Repos::UserContext::UserRepository.new }
         option :auction_repo, default: proc { Repos::AuctionContext::AuctionRepository.new }
 
-        # @param [Hash] opts Sets an allowed list of parameters, as well as some initial validations.
+        # Parameters specifying the required input types and fields.
         params do
           required(:auction_id).filled(:integer)
           required(:user_id).filled(:integer)
@@ -20,9 +33,7 @@ module AuctionFunCore
           end
         end
 
-        # Validation for auction.
-        # validate whether the given auction is valid at the database level.
-        # validate if the auction is open to receive bids
+        # Validates the auction's validity, kind, and status for receiving bids.
         rule(:auction_id) do |context:|
           context[:auction] ||= auction_repo.by_id(value)
 
@@ -41,22 +52,20 @@ module AuctionFunCore
           end
         end
 
-        # Validation for user.
-        # Validate whether the given user is valid at the database level.
+        # Validates the user's existence in the database.
         rule(:user_id) do |context:|
           context[:user] ||= user_repo.by_id(value)
           key.failure(I18n.t("contracts.errors.custom.not_found")) unless context[:user]
         end
 
-        # Validation for value bid.
-        # must be greater than or equal to the auction's minimal bid.
+        # Validates that the bid amount is greater than or equal to the auction's minimum bid.
         rule(:value_cents) do |context:|
           standard_auction_valid_bid?(key, value, context[:auction].minimal_bid_cents)
         end
 
         private
 
-        # Checks if the bid amount is greather than or equal to minimum bid.
+        # Helper method to check if the bid amount meets the minimum required bid.
         def standard_auction_valid_bid?(key, value_cents, minimal_bid_cents)
           return if value_cents >= minimal_bid_cents
 

@@ -6,13 +6,18 @@ module AuctionFunCore
       module AuctionContext
         module PostAuction
           ##
-          # BackgroundJob class for call finish auction operation.
+          # Background job class responsible for performing participant operations after an finished auction.
           class ParticipantOperationJob < Workers::ApplicationJob
             include Import["repos.user_context.user_repository"]
             include Import["repos.auction_context.auction_repository"]
             include Import["operations.auction_context.post_auction.participant_operation"]
 
-            # @todo Add detailed documentation
+            # Executes the participant operation for the specified auction and participant.
+            #
+            # @param auction_id [Integer] The ID of the auction.
+            # @param participant_id [Integer] The ID of the participant.
+            # @param retry_count [Integer] The current retry count for the job.
+            # @return [void]
             def perform(auction_id, participant_id, retry_count = 0)
               auction = auction_repository.by_id!(auction_id)
               participant = user_repository.by_id!(participant_id)

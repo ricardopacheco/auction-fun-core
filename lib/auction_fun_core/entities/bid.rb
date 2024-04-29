@@ -2,8 +2,9 @@
 
 module AuctionFunCore
   module Entities
-    # Bid Relations class. This return simple objects with attribute readers
-    # to represent data in your bid.
+    ##
+    # Defines the Bid class as Entity. It appears to be a simple data structure
+    # class representing bid-related information.
     class Bid < ROM::Struct
     end
   end

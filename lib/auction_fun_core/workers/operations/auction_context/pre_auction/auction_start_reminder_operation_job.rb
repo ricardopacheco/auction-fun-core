@@ -6,12 +6,16 @@ module AuctionFunCore
       module AuctionContext
         module PreAuction
           ##
-          # BackgroundJob class for call auction start reminder operation.
+          # Background job class responsible for sending auction start reminders
           class AuctionStartReminderOperationJob < Workers::ApplicationJob
             include Import["repos.user_context.user_repository"]
             include Import["repos.auction_context.auction_repository"]
 
-            # @todo Add detailed documentation
+            # Executes the auction start reminder operation for the specified auction.
+            #
+            # @param auction_id [Integer] The ID of the auction.
+            # @param retry_count [Integer] The current retry count for the job.
+            # @return [void]
             def perform(auction_id, retry_count = 0)
               auction = auction_repository.by_id!(auction_id)
 
@@ -26,9 +30,9 @@ module AuctionFunCore
 
             private
 
-            # Since the shipping code structure does not follow project conventions,
-            # making the default injection dependency would be more complicated.
-            # Therefore, here I directly explain the class to be called.
+            # Retrieves the auction start reminder operation.
+            #
+            # @return [Class] The auction start reminder operation class.
             def auction_start_reminder_operation
               AuctionFunCore::Operations::AuctionContext::PreAuction::AuctionStartReminderOperation
             end

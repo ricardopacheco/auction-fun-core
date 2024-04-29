@@ -2,11 +2,10 @@
 
 module AuctionFunCore
   module Entities
-    # Auction Relations class. This return simple objects with attribute readers
-    # to represent data in your auction.
+    ##
+    # Defines the Auction class as Entity. It appears to be a simple data structure
+    # class representing auction-related information.
     class Auction < ROM::Struct
-      INQUIRER_ATTRIBUTES = Relations::Auctions::STATUSES.values.freeze
-
       # Retrieves the initial bid amount for an auction as a Money object.
       #
       # This method creates and returns a new Money object that represents the initial bid

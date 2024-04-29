@@ -5,18 +5,30 @@ module AuctionFunCore
     module AuctionContext
       module Processor
         ##
-        # Contract class for pause auction.
+        # This class is designed to validate pausing an auction. It ensures
+        # that the auction exists in the database and checks that only auctions with
+        # a "running" status can be paused.
+        #
+        # @example Pausing an auction
+        #   contract = AuctionFunCore::Contracts::AuctionContext::Processor::PauseContract.new
+        #   attributes = { auction_id: 123 }
+        #   result = contract.call(attributes)
+        #   if result.success?
+        #     puts "Auction paused successfully."
+        #   else
+        #     puts "Failed to pause auction: #{result.errors.to_h}"
+        #   end
         #
         class PauseContract < Contracts::ApplicationContract
+          # Repository initialized to retrieve auction data for validation.
           option :auction_repository, default: proc { Repos::AuctionContext::AuctionRepository.new }
 
+          # Parameters specifying the required input types and fields.
           params do
             required(:auction_id).filled(:integer)
           end
 
-          # Validation for auction.
-          # Validates if the auction exists in the database and check if  only auctions
-          # with a "running" status can be paused.
+          # Validates the existence of the auction and its status.
           rule(:auction_id) do |context:|
             context[:auction] ||= auction_repository.by_id(value)
             key.failure(I18n.t("contracts.errors.custom.not_found")) unless context[:auction]

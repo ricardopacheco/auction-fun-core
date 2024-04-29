@@ -3,13 +3,27 @@
 module AuctionFunCore
   module Contracts
     module BidContext
-      # Contract class to create new bids.
+      # This class validates the creation of new bids for closed-type auctions.
+      # It ensures the bid is placed by a valid user on a valid auction that is open for bids, and that
+      # the bid value meets or exceeds the starting bid required by the auction.
+      # Furthermore, only one bid per participant is allowed.
+      #
+      # @example Creating a bid for a closed auction
+      #   contract = AuctionFunCore::Contracts::BidContext::CreateBidClosedContract.new
+      #   attributes = { auction_id: 123, user_id: 2, value_cents: 10000 }
+      #   result = contract.call(attributes)
+      #   if result.success?
+      #     puts "Bid created successfully."
+      #   else
+      #     puts "Failed to create bid: #{result.errors.to_h}"
+      #   end
       class CreateBidClosedContract < Contracts::ApplicationContract
+        # Repositories initialized to retrieve data for validation.
         option :user_repository, default: proc { Repos::UserContext::UserRepository.new }
         option :auction_repository, default: proc { Repos::AuctionContext::AuctionRepository.new }
         option :bid_repository, default: proc { Repos::BidContext::BidRepository.new }
 
-        # @param [Hash] opts Sets an allowed list of parameters, as well as some initial validations.
+        # Parameters specifying the required input types and fields.
         params do
           required(:auction_id).filled(:integer)
           required(:user_id).filled(:integer)
@@ -21,9 +35,7 @@ module AuctionFunCore
           end
         end
 
-        # Validation for auction.
-        # validate whether the given auction is valid at the database level.
-        # validate if the auction is open to receive bids
+        # Validates the auction's validity and status for receiving bids.
         rule(:auction_id) do |context:|
           context[:auction] ||= auction_repository.by_id(value)
 
@@ -42,9 +54,7 @@ module AuctionFunCore
           end
         end
 
-        # Validation for user.
-        # Validate whether the given user is valid at the database level.
-        # Validates if user has already placed a bid
+        # Validates the user's existence and checks if they have already placed a bid.
         rule(:user_id) do |context:|
           context[:user] ||= user_repository.by_id(value)
 
@@ -57,8 +67,7 @@ module AuctionFunCore
           end
         end
 
-        # Validation for value bid.
-        # The bid amount must be greater than or equal to the starting bid.
+        # Validates that the bid amount is greater than or equal to the auction's starting bid.
         rule(:value_cents) do |context:|
           unless rule_error?(:user_id)
             closed_auction_bid_value_is_gteq_initial_bid?(key, value, context[:auction].initial_bid_cents)
@@ -67,7 +76,7 @@ module AuctionFunCore
 
         private
 
-        # Checks if bid amount must be greater than or equal to the starting bid.
+        # Helper method to check if the bid amount meets the minimum required bid.
         def closed_auction_bid_value_is_gteq_initial_bid?(key, value_cents, minimal_bid_cents)
           return unless value_cents < minimal_bid_cents
 

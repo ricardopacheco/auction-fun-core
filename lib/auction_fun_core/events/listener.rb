@@ -2,7 +2,10 @@
 
 module AuctionFunCore
   module Events
-    # Event class that can listen business events.
+    ##
+    # Represents a class that listens to business events and performs actions accordingly.
+    #
+    # This class defines methods to handle various events related to auctions, bids, staff, and users.
     # @see https://dry-rb.org/gems/dry-events/main/#event-listeners
     class Listener
       # Listener for to *auctions.created* event.
@@ -36,15 +39,15 @@ module AuctionFunCore
       end
 
       # Listener for to *bids.created* event.
-      # @param event [Integer] Auction ID
+      # @param event [ROM::Struct::Bid] Auction ID
       def on_bids_created(bid)
         logger("Create bid with: #{bid.to_h}")
       end
 
-      # Listener for to *staffs.authentication* event.
-      # @param attributes [Hash] Authentication attributes
-      # @option staff_id [Integer] Staff ID
-      # @option time [DateTime] Authentication time
+      # Listener for the *staffs.authentication* event.
+      # @param attributes [Hash] Authentication attributes.
+      # @option attributes staff_id [Integer] Staff ID.
+      # @option attributes time [DateTime] Authentication time.
       def on_staffs_authentication(attributes)
         logger("Staff #{attributes[:staff_id]} authenticated on: #{attributes[:time].iso8601}")
       end
@@ -61,26 +64,26 @@ module AuctionFunCore
         logger("New registered user: #{user.to_h}")
       end
 
-      # Listener for to *users.authentication* event.
-      # @param attributes [Hash] Authentication attributes
-      # @option user_id [Integer] User ID
-      # @option time [DateTime] Authentication time
+      # Listener for the *users.authentication* event.
+      # @param attributes [Hash] Authentication attributes.
+      # @option attributes user_id [Integer] User ID.
+      # @option attributes time [DateTime] Authentication time.
       def on_users_authentication(attributes)
         logger("User #{attributes[:user_id]} authenticated on: #{attributes[:time].iso8601}")
       end
 
-      # Listener for to *users.confirmation* event.
-      # @param attributes [Hash] Confirmation attributes
-      # @option user_id [Integer] User ID
-      # @option time [DateTime] Authentication time
+      # Listener for the *users.confirmation* event.
+      # @param attributes [Hash] Confirmation attributes.
+      # @option user_id [Integer] User ID.
+      # @option time [DateTime] Authentication time.
       def on_users_confirmation(attributes)
         logger("User #{attributes[:user_id]} confirmed at: #{attributes[:time].iso8601}")
       end
 
       private
 
-      # Append message to system log.
-      # @param message [String] the message
+      # Appends a message to the system log.
+      # @param message [String] The message.
       def logger(message)
         Application[:logger].info(message)
       end

@@ -9,7 +9,11 @@ group :development, :test do
   gem "faker", "3.3.1"
   gem "pry", "0.14.2"
   gem "rspec", "3.13.0"
+end
+
+group :development do
   gem "standard", "1.35.1"
+  gem "webrick", "1.8.1"
 end
 
 group :test do
