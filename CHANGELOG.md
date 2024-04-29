@@ -10,6 +10,7 @@
 
 - Upgrade README;
 - Updating CI to run lint;
+- Using the heredoc standard to build SQL queries;
 
 ## [0.8.8] - 2024-04-25
 
