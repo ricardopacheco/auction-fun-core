@@ -7,8 +7,7 @@ module AuctionFunCore
         module Processor
           module Finish
             ##
-            # BackgroundJob class for call finish penny auction operation.
-            #
+            # Background job class responsible for call finish penny auction operation.
             class PennyOperationJob < Workers::ApplicationJob
               include Sidekiq::Worker
               include Import["repos.auction_context.auction_repository"]
@@ -16,7 +15,11 @@ module AuctionFunCore
 
               sidekiq_options queue: "default", lock: :until_executed, on_conflict: :replace
 
-              # @todo Add detailed documentation
+              # Executes the operation to finish a penny auction.
+              #
+              # @param auction_id [Integer] The ID of the penny auction.
+              # @param retry_count [Integer] The current retry count for the job.
+              # @return [void]
               def perform(auction_id, retry_count = 0)
                 auction = auction_repository.by_id!(auction_id)
 

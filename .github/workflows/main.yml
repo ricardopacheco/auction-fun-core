@@ -51,5 +51,7 @@ jobs:
           bundle exec rake auction_fun_core:db:migrate
         env:
           POSTGRES_HOST: localhost
+      - name: Run lint
+        run: bundle exec standardrb
       - name: Run suite
         run: bundle exec rspec spec/ --color --format progress

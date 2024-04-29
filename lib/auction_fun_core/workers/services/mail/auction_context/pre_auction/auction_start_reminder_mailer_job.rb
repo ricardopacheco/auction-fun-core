@@ -7,14 +7,18 @@ module AuctionFunCore
         module AuctionContext
           module PreAuction
             ##
-            # Background job class responsible for adding emails to the queue.
-            #
+            # Background job class responsible for adding auction start emails to the queue.
             class AuctionStartReminderMailerJob < AuctionFunCore::Workers::ApplicationJob
               include Import["repos.user_context.user_repository"]
               include Import["repos.auction_context.auction_repository"]
 
-              # @param auction_id [Integer] auction ID
-              # @param participant_id [Integer] user ID
+              # Executes the operation of sending an email to the participant notifying
+              # them of the start of the auction.
+              #
+              # @param auction_id [Integer] The ID of the standard auction.
+              # @param participant_id [Integer] The ID of the participant
+              # @param retry_count [Integer] The current retry count for the job.
+              # @return [void]
               def perform(auction_id, participant_id, retry_count = 0)
                 auction = auction_repository.by_id!(auction_id)
                 participant = user_repository.by_id!(participant_id)
@@ -30,9 +34,8 @@ module AuctionFunCore
 
               private
 
-              # Since the shipping code structure does not follow project conventions,
-              # making the default injection dependency would be more complicated.
-              # Therefore, here I directly explain the class to be called.
+              # Directly specifies the class to be called due to non-standard dependency injection.
+              # @return [Class] The auction start reminder mailer class.
               def auction_start_reminder_mailer
                 AuctionFunCore::Services::Mail::AuctionContext::PreAuction::AuctionStartReminderMailer
               end

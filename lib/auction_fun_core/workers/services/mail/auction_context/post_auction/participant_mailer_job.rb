@@ -7,14 +7,17 @@ module AuctionFunCore
         module AuctionContext
           module PostAuction
             ##
-            # Background job class responsible for adding emails to the queue.
-            #
+            # Background job class responsible for queuing participant emails.
             class ParticipantMailerJob < AuctionFunCore::Workers::ApplicationJob
               include Import["repos.user_context.user_repository"]
               include Import["repos.auction_context.auction_repository"]
 
-              # @param auction_id [Integer] auction ID
-              # @param participant_id [Integer] user ID
+              # Reads the statistics of a participant in an auction and sends it by email.
+              #
+              # @param auction_id [Integer] The ID of the auction.
+              # @param participant_id [Integer] The ID of the participant.
+              # @param retry_count [Integer] The current retry count for the job.
+              # @return [void]
               def perform(auction_id, participant_id, retry_count = 0)
                 auction = auction_repository.by_id!(auction_id)
                 participant = user_repository.by_id!(participant_id)
@@ -32,13 +35,15 @@ module AuctionFunCore
 
               private
 
-              # Since the shipping code structure does not follow project conventions,
-              # making the default injection dependency would be more complicated.
-              # Therefore, here I directly explain the class to be called.
+              # Directly specifies the class to be called due to non-standard dependency injection.
+              # @return [Class] The participant mailer class.
               def participant_mailer
                 AuctionFunCore::Services::Mail::AuctionContext::PostAuction::ParticipantMailer
               end
 
+              # Retrieves the relation for loading participant statistics.
+              #
+              # @return [ROM::Relation] The relation object.
               def relation
                 AuctionFunCore::Application[:container].relations[:auctions]
               end

@@ -7,13 +7,16 @@ module AuctionFunCore
         module Processor
           module Finish
             ##
-            # BackgroundJob class for call finish closed auction operation.
-            #
+            # Background job class responsible for call finish closed auction operation.
             class ClosedOperationJob < Workers::ApplicationJob
               include Import["repos.auction_context.auction_repository"]
               include Import["operations.auction_context.processor.finish.closed_operation"]
 
-              # @todo Add detailed documentation
+              # Executes the operation to finish a closed auction.
+              #
+              # @param auction_id [Integer] The ID of the closed auction.
+              # @param retry_count [Integer] The current retry count for the job.
+              # @return [void]
               def perform(auction_id, retry_count = 0)
                 auction = auction_repository.by_id!(auction_id)
 

@@ -1,5 +1,16 @@
 ## [Unreleased]
 
+## [0.8.9] - 2024-04-29
+
+### Added
+
+- Using yadr as a standard documentation tool;
+
+### Changed
+
+- Upgrade README;
+- Updating CI to run lint;
+
 ## [0.8.8] - 2024-04-25
 
 ### Added

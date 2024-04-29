@@ -6,13 +6,16 @@ module AuctionFunCore
       module AuctionContext
         module Processor
           ##
-          # BackgroundJob class for call start auction operation.
-          #
+          # Background job class responsible for call start auction operation.
           class StartOperationJob < AuctionFunCore::Workers::ApplicationJob
             include Import["repos.auction_context.auction_repository"]
             include Import["operations.auction_context.processor.start_operation"]
 
-            # @todo Add detailed documentation
+            # Executes the operation to start an auction.
+            #
+            # @param auction_id [Integer] The ID of the auction to start.
+            # @param retry_count [Integer] The current retry count for the job.
+            # @return [void]
             def perform(auction_id, retry_count = 0)
               auction = auction_repository.by_id!(auction_id)
 

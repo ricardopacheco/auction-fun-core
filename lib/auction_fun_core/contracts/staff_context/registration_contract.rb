@@ -3,13 +3,27 @@
 module AuctionFunCore
   module Contracts
     module StaffContext
-      # Contract class to create new staff.
+      # This class is designed to create staff members.
+      # It validates the parameters, ensuring their format and uniqueness.
+      #
+      # @example Registering a new staff member
+      #   contract = AuctionFunCore::Contracts::StaffContext::RegistrationContract.new
+      #   attributes = { name: 'John Doe', email: 'john.doe@example.com', phone: '1234567890' }
+      #   result = contract.call(attributes)
+      #   if result.success?
+      #     puts "Staff member registered successfully."
+      #   else
+      #     puts "Failed to register staff member: #{result.errors.to_h}"
+      #   end
+      #
       class RegistrationContract < ApplicationContract
+        # Scope for internationalization (i18n) entries specific to errors in this contract.
         I18N_SCOPE = "contracts.errors.custom.default"
 
+        # Repositories initialized to retrieve data for validation.
         option :staff_repository, default: proc { Repos::StaffContext::StaffRepository.new }
 
-        # @param [Hash] opts Sets an allowed list of parameters, as well as some initial validations.
+        # Parameters specifying the required input types and fields.
         params do
           required(:name)
           required(:email)
@@ -19,27 +33,25 @@ module AuctionFunCore
             result.to_h.compact
           end
 
-          # Normalize and add default values
+          # Normalizes and adds default values after coercion.
           after(:value_coercer) do |result|
             result.update(email: result[:email].strip.downcase) if result[:email]
             result.update(phone: result[:phone].tr_s("^0-9", "")) if result[:phone]
           end
         end
 
+        # Validates the format of the staff member's name.
         rule(:name).validate(:name_format)
 
-        # Validation for email.
-        # It must validate the format and uniqueness in the database.
+        # It ensures email format and checks for uniqueness in the database.
         rule(:email).validate(:email_format)
         rule(:email) do
-          # Email should be unique on database
           if !rule_error?(:email) && staff_repository.exists?(email: value)
             key.failure(I18n.t(:taken, scope: I18N_SCOPE))
           end
         end
 
-        # Validation for phone.
-        # It must validate the format and uniqueness in the database.
+        # It ensures phone format and checks for uniqueness in the database.
         rule(:phone).validate(:phone_format)
         rule(:phone) do
           if !rule_error?(:phone) && staff_repository.exists?(phone: value)

@@ -3,12 +3,27 @@
 module AuctionFunCore
   module Contracts
     module UserContext
-      # Contract class to authenticate users.
+      # This class is designed to authenticate users.
+      # It verifies the provided login credentials against stored user data in the system.
+      #
+      # @example Authenticating a user
+      #   contract = AuctionFunCore::Contracts::UserContext::AuthenticationContract.new
+      #   attributes = { login: 'example_user', password: 'securePassword123' }
+      #   result = contract.call(attributes)
+      #   if result.success?
+      #     puts "User authenticated successfully."
+      #   else
+      #     puts "Authentication failed: #{result.errors.to_h}"
+      #   end
+      #
       class AuthenticationContract < ApplicationContract
+        # Scope for internationalization (i18n) entries specific to errors in this contract.
         I18N_SCOPE = "contracts.errors.custom.default"
 
+        # Repositories initialized to retrieve data for validation.
         option :user_repository, default: proc { Repos::UserContext::UserRepository.new }
 
+        # Parameters specifying the required input types and fields.
         params do
           required(:login)
           required(:password)
@@ -18,12 +33,11 @@ module AuctionFunCore
           end
         end
 
+        # Additional rules for validating the format of login and password.
         rule(:login).validate(:login_format)
         rule(:password).validate(:password_format)
 
-        # Validation for login.
-        # Searches for the user in the database from the login, and, if found,
-        # compares the entered password.
+        # Validates the presence of the user in the database and checks if the password matches.
         rule do |context:|
           next if (rule_error?(:login) || schema_error?(:login)) || (rule_error?(:password) || schema_error?(:password))
 
