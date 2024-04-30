@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+## [0.8.10] - 2024-04-30
+
+### Changed
+
+- Allow spec files when publishing the gem;
+
 ## [0.8.9] - 2024-04-29
 
 ### Added
